@@ -9,18 +9,18 @@ import com.example.demo.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
-@Controller 
+@Controller
 @RequiredArgsConstructor
 public class AuthController {
 
 	private final UserService userService;
-	
+
 	// 회원가입 페이지
 	@GetMapping("/register")
 	public String registerForm() {
 		return "register";
 	}
-	
+
 	// 회원가입 처리
 	@PostMapping("/register")
 	public String register(@RequestParam String username, @RequestParam String password, @RequestParam String email) {
