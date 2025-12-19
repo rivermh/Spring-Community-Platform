@@ -8,7 +8,7 @@ import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
 import com.example.demo.repository.UserRepository;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 
 @Service
@@ -44,5 +44,11 @@ public class UserService {
 		
 		// 5. 저장
 		userRepository.save(user);
+	}
+	
+	// 조회 메서드 
+	@Transactional(readOnly = true)
+	public User findByUsername(String username) {
+		return userRepository.findByUsername(username).orElseThrow(()-> new IllegalArgumentException("사용자 없음"));
 	}
 }
