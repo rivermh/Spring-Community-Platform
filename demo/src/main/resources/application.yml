@@ -1,0 +1,29 @@
+server:
+  port: 8080
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/demo?serverTimezone=Asia/Seoul
+    username: root
+    password: 0000
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: update   # 처음엔 update, 나중에 validate
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+
+  thymeleaf:
+    cache: false
+    prefix: classpath:/templates/
+    suffix: .html
+
+  mvc:
+    hiddenmethod:
+      filter:
+        enabled: true
