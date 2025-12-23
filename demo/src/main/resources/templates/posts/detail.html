@@ -9,11 +9,8 @@
 	<h2 th:text="${post.title}"></h2>
 
 	<p>
-		작성자:
-		<span th:text="${post.user.username}"></span>
-		|
-		작성일:
-		<span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
+		작성자: <span th:text="${post.user.username}"></span> | 작성일: <span
+			th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
 	</p>
 
 	<hr>
@@ -24,12 +21,12 @@
 
 	<!-- 버튼 영역 -->
 	<div th:if="${loginUser != null}">
-		<th:block th:if="${loginUser.username == post.user.username}"> <!-- 여기서 작성자만 버튼 노출 -->
+		<th:block th:if="${loginUser.username == post.user.username}">
+			<!-- 여기서 작성자만 버튼 노출 -->
 			<a th:href="@{|/posts/${post.id}/edit|}">수정</a>
 
-			<form th:action="@{|/posts/${post.id}/delete|}"
-				  method="post"
-				  style="display:inline;">
+			<form th:action="@{|/posts/${post.id}/delete|}" method="post"
+				style="display: inline;" onsubmit="return confirm('정말로 삭제하시겠습니까?');">
 				<button type="submit">삭제</button>
 			</form>
 		</th:block>

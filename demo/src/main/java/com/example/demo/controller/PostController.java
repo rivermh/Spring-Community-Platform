@@ -50,9 +50,15 @@ public class PostController {
 	
 	//게시글 상세
 	@GetMapping("/{id}")
-	public String detail(@PathVariable Long id, Model model) {
+	public String detail(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
 		Post post = postService.findById(id);
 		model.addAttribute("post", post);
+		
+		// 로그인 사용자 정보 전달(중요)
+		if(userDetails != null) {
+			model.addAttribute("loginUser", userDetails);
+		}
+		
 		return "posts/detail";
 	}
 	
@@ -74,6 +80,13 @@ public class PostController {
 		postService.update(id, userDetails.getUsername(), title, content);
 		
 		return "redirect:/posts/" + id;
+	}
+	//게시글 삭제 처리
+	@PostMapping("/{id}/delete")
+	public String delete(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails) {
+		postService.delete(id, userDetails.getUsername());
+		
+		return "redirect:/posts";
 	}
 	
 }

@@ -37,7 +37,7 @@ public class PostService {
 		return postRepository.findAllByOrderByCreatedAtDesc();
 	}
 	
-	//글 상세
+	//글 상세/수정 공용
 	public Post findById(Long postId) {
 	    return postRepository.findWithUserById(postId)
 	        .orElseThrow(() -> new IllegalArgumentException("게시글이 존재하지 않습니다."));
