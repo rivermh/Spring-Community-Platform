@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.example.demo.dto.PostEditDto;
 import com.example.demo.entity.Post;
 import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.PostService;
@@ -53,6 +54,26 @@ public class PostController {
 		Post post = postService.findById(id);
 		model.addAttribute("post", post);
 		return "posts/detail";
+	}
+	
+	//게시글 수정 페이지 (DTO)
+	@GetMapping("/{id}/edit")
+	public String editForm(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
+		// 수정 페이지에 필요한 데이터 조회(DTO)
+		PostEditDto post = postService.getEditPost(id, userDetails.getUsername());
+		model.addAttribute("post", post);
+		
+		return "posts/edit";
+	}
+	
+	// 게시글 수정 처리 (POST) 
+	@PostMapping("/{id}/edit")
+	public String edit(@PathVariable Long id, @AuthenticationPrincipal CustomUserDetails userDetails, @RequestParam String title, @RequestParam String content) {
+		
+		// 실제 게시글 수정(Dirty Checking)
+		postService.update(id, userDetails.getUsername(), title, content);
+		
+		return "redirect:/posts/" + id;
 	}
 	
 }
