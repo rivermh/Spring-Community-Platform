@@ -37,7 +37,7 @@ public class CommentRestController {
     ) {
         commentService.create(postId, userDetails.getUsername(), dto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
+    } 
 
     // 댓글 목록 조회 ✅
     @GetMapping("/posts/{postId}/comments")
