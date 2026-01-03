@@ -87,7 +87,7 @@ public class CommentService {
 		}
 		
 		comment.update(dto.getContent());
-	}
+	} // dirty checking으로 update
 	
 	//댓글 삭제
 	public void delete(Long commentId, String username) {
