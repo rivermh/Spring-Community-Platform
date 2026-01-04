@@ -3,7 +3,7 @@
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
       th:replace="layout/layout :: layout">
 
-<th:block th:fragment="content">
+<div th:fragment="content">
 
     <div class="card shadow-sm">
         <div class="card-body p-5">
@@ -17,18 +17,36 @@
 
             <!-- 로그인 안 했을 때 -->
             <div sec:authorize="isAnonymous()">
-                <a th:href="@{/login}" class="btn btn-primary me-2">로그인</a>
-                <a th:href="@{/register}" class="btn btn-outline-secondary">회원가입</a>
+                <p class="mb-3">로그인 후 게시글을 작성할 수 있습니다.</p>
+
+                <a th:href="@{/login}" class="btn btn-primary me-2">
+                    로그인
+                </a>
+                <a th:href="@{/register}" class="btn btn-outline-secondary">
+                    회원가입
+                </a>
             </div>
 
             <!-- 로그인 했을 때 -->
             <div sec:authorize="isAuthenticated()">
-                <a th:href="@{/posts}" class="btn btn-success me-2">자유게시판</a>
-                <a th:href="@{/mypage}" class="btn btn-outline-primary">마이페이지</a>
+                <p class="mb-3">
+                    환영합니다,
+                    <strong sec:authentication="name"></strong> 님
+                </p>
+
+                <div class="d-flex gap-2 mb-3">
+                    <a th:href="@{/posts}" class="btn btn-success">
+                        자유게시판
+                    </a>
+
+                    <a th:href="@{/mypage}" class="btn btn-outline-primary">
+                        마이페이지
+                    </a>
+                </div>
             </div>
 
         </div>
     </div>
 
-</th:block>
+</div>
 </html>
