@@ -1,36 +1,54 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>자유게시판</title>
-</head>
-<body>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="layout/layout :: layout">
 
-<h2>자유게시판</h2>
+<th:block th:fragment="content">
 
-<a th:href="@{/posts/new}">글쓰기</a>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+        <h2 class="mb-0">자유게시판</h2>
 
-<table border="1">
-    <thead>
-        <tr>
-            <th>번호</th>
-            <th>제목</th>
-            <th>작성자</th>
-            <th>작성일</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr th:each="post : ${posts}">
-            <td th:text="${post.id}"></td>
-            <td>
-                <a th:href="@{/posts/{id}(id=${post.id})}"
-                   th:text="${post.title}"></a>
-            </td>
-            <td th:text="${post.user.username}"></td>
-            <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
-        </tr>
-    </tbody>
-</table>
+        <!-- 로그인한 사용자만 글쓰기 -->
+        <a sec:authorize="isAuthenticated()"
+           th:href="@{/posts/new}"
+           class="btn btn-primary">
+            글쓰기
+        </a>
+    </div>
 
-</body>
+    <table class="table table-hover shadow-sm">
+        <thead class="table-dark">
+            <tr>
+                <th style="width: 10%">번호</th>
+                <th>제목</th>
+                <th style="width: 15%">작성자</th>
+                <th style="width: 20%">작성일</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="post : ${posts}">
+                <td th:text="${post.id}"></td>
+
+                <td>
+                    <a th:href="@{/posts/{id}(id=${post.id})}"
+                       th:text="${post.title}"
+                       class="text-decoration-none fw-semibold">
+                    </a>
+                </td>
+
+                <td th:text="${post.user.username}"></td>
+
+                <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+            </tr>
+
+            <!-- 게시글 없을 때 -->
+            <tr th:if="${#lists.isEmpty(posts)}">
+                <td colspan="4" class="text-center text-muted py-4">
+                    아직 게시글이 없습니다.
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</th:block>
 </html>
