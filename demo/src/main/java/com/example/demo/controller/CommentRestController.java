@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -15,6 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.example.demo.dto.CommentCreateDto;
 import com.example.demo.dto.CommentResponseDto;
+import com.example.demo.dto.CommentUpdateDto;
 import com.example.demo.entity.User;
 import com.example.demo.security.CustomUserDetails;
 import com.example.demo.service.CommentService;
@@ -48,6 +50,17 @@ public class CommentRestController {
         User loginUser = (userDetails != null) ? userDetails.getUser() : null;
         return commentService.findByPost(postId, loginUser);
     }
+    
+    @PatchMapping("/comments/{commentId}")
+    public ResponseEntity<Void> update(
+            @PathVariable Long commentId,
+            @RequestBody CommentUpdateDto dto,
+            @AuthenticationPrincipal CustomUserDetails userDetails
+    ) {
+        commentService.update(commentId, userDetails.getUsername(), dto);
+        return ResponseEntity.noContent().build();
+    }
+   
 
     // 댓글 삭제 ✅
     @DeleteMapping("/comments/{commentId}")

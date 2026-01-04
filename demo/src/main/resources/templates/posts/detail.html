@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
-    <title th:text="${post.title}">게시글</title>
+<meta charset="UTF-8">
+<title th:text="${post.title}">게시글</title>
 </head>
 
 <body th:data-post-id="${post.id}">
@@ -10,7 +10,8 @@
 <h2 th:text="${post.title}"></h2>
 
 <p>
-    작성자: <span th:text="${post.user.username}"></span> |
+    작성자:
+    <span th:text="${post.user.username}"></span> |
     작성일:
     <span th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
 </p>
@@ -21,15 +22,15 @@
 
 <hr>
 
-<!-- 작성자만 수정/삭제 -->
+<!-- 게시글 수정 / 삭제 -->
 <div th:if="${loginUser != null}">
     <th:block th:if="${loginUser.username == post.user.username}">
         <a th:href="@{|/posts/${post.id}/edit|}">수정</a>
 
         <form th:action="@{|/posts/${post.id}/delete|}"
               method="post"
-              style="display:inline;"
-              onsubmit="return confirm('정말로 삭제하시겠습니까?');">
+              style="display:inline"
+              onsubmit="return confirm('정말 삭제하시겠습니까?')">
             <button type="submit">삭제</button>
         </form>
     </th:block>
@@ -39,12 +40,13 @@
 
 <h3>댓글</h3>
 
+<!-- 댓글 목록 -->
+<div id="comment-list"></div>
+
 <!-- 댓글 작성 -->
 <div th:if="${loginUser != null}">
     <form id="comment-form">
-        <textarea id="comment-content"
-                  placeholder="댓글을 입력하세요"
-                  required></textarea>
+        <textarea id="comment-content" required></textarea>
         <br>
         <button type="submit">댓글 작성</button>
     </form>
@@ -54,83 +56,97 @@
     <p>댓글을 작성하려면 로그인하세요.</p>
 </div>
 
-<hr>
-
-<!-- 🔥 댓글 목록 영역 -->
-<div id="comment-list"></div>
-
-<hr>
-
 <a th:href="@{/posts}">목록</a>
 
+<!-- ================= JS ================= -->
 <script>
-    // postId 안전하게 가져오기
-    const postId = document.body.dataset.postId;
+const postId = document.body.dataset.postId;
 
-    function loadComments() {
-        fetch(`/api/posts/${postId}/comments`)
-            .then(res => res.json())
-            .then(data => {
-                const list = document.getElementById("comment-list");
-                list.innerHTML = "";
+/* 댓글 목록 */
+function loadComments() {
+    fetch(`/api/posts/${postId}/comments`)
+        .then(res => res.json())
+        .then(data => {
+            const list = document.getElementById("comment-list");
+            list.innerHTML = "";
 
-                data.forEach(comment => {
-                    let deleteBtn = "";
-                    if (comment.mine) {
-                        deleteBtn = `<button onclick="deleteComment(${comment.id})">삭제</button>`;
-                    }
+            data.forEach(comment => {
+                const div = document.createElement("div");
 
-                    const div = document.createElement("div");
-                    div.innerHTML = `
-                        <p>
-                            <b>${comment.username}</b> :
-                            ${comment.content}
-                            <small>(${comment.createdAt})</small>
-                            ${deleteBtn}
-                        </p>
+                let actionBtns = "";
+                if (comment.mine) {
+                    actionBtns = `
+                        <button class="edit-btn"
+                                data-id="${comment.id}"
+                                data-content="${comment.content}">
+                            수정
+                        </button>
+                        <button onclick="deleteComment(${comment.id})">삭제</button>
                     `;
-                    list.appendChild(div);
-                });
+                }
+
+                div.innerHTML = `
+                    <p>
+                        <b>${comment.username}</b> :
+                        <span>${comment.content}</span>
+                        <small>(${comment.createdAt})</small>
+                        ${actionBtns}
+                    </p>
+                `;
+
+                list.appendChild(div);
             });
-    }
-
-    // 댓글 작성
-    document.getElementById("comment-form")?.addEventListener("submit", function (e) {
-        e.preventDefault();
-
-        const content = document.getElementById("comment-content").value;
-
-        fetch(`/api/posts/${postId}/comments`, {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ content })
-        }).then(res => {
-            if (res.ok) {
-                document.getElementById("comment-content").value = "";
-                loadComments();
-            } else {
-                alert("댓글 작성 실패");
-            }
         });
+}
+
+/* 댓글 작성 */
+document.getElementById("comment-form")?.addEventListener("submit", e => {
+    e.preventDefault();
+
+    const content = document.getElementById("comment-content").value;
+
+    fetch(`/api/posts/${postId}/comments`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ content })
+    }).then(res => {
+        if (res.ok) {
+            document.getElementById("comment-content").value = "";
+            loadComments();
+        }
     });
+});
 
-    // 댓글 삭제
-    function deleteComment(commentId) {
-        fetch(`/api/comments/${commentId}`, {
-            method: "DELETE"
+/* 댓글 삭제 */
+function deleteComment(id) {
+    fetch(`/api/comments/${id}`, { method: "DELETE" })
+        .then(res => {
+            if (res.ok) loadComments();
+            else alert("삭제 권한 없음");
+        });
+}
+
+/* 댓글 수정 (이벤트 위임) */
+document.addEventListener("click", e => {
+    if (e.target.classList.contains("edit-btn")) {
+        const id = e.target.dataset.id;
+        const oldContent = e.target.dataset.content;
+
+        const newContent = prompt("댓글 수정", oldContent);
+        if (!newContent) return;
+
+        fetch(`/api/comments/${id}`, {
+            method: "PATCH",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ content: newContent })
         }).then(res => {
-            if (res.ok) {
-                loadComments();
-            } else {
-                alert("삭제 권한이 없습니다");
-            }
+            if (res.ok) loadComments();
+            else alert("수정 권한 없음");
         });
     }
+});
 
-    // 최초 로딩
-    loadComments();
+loadComments();
 </script>
 
 </body>
