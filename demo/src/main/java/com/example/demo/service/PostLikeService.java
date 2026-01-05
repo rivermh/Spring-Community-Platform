@@ -34,7 +34,7 @@ public class PostLikeService {
 							.build();
 					postLikeRepository.save(newLike); // 좋아요 등록
 					return true; // 좋아요 성공
-				});
+				}); 
 	}
 	
 	public long getLikeCount(Post post) {
