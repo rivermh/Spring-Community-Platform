@@ -72,7 +72,7 @@ public class PostService {
 			throw new SecurityException("수정 권한이 없습니다.");
 		}	
 		post.update(title, content);
-	}
+	} 
 	
 	//글 삭제
 	public void delete(Long postId, String username) {
