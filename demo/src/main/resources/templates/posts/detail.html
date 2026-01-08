@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      th:replace="~{layout/layout :: layout}">
+      th:replace="~{layout/layout :: layout(content=~{::content})}">
 
-<div th:fragment="content">
+<th:block th:fragment="content">
 
     <!-- 게시글 카드 -->
     <div class="card shadow-sm mb-4">
@@ -55,7 +55,6 @@
                         <span class="ms-2 badge bg-secondary"
                               id="like-count"
                               th:text="${post.likeCount}">
-                            0
                         </span>
                     </div>
 
@@ -106,5 +105,5 @@
     <!-- JS -->
     <script th:src="@{/js/posts-detail.js}"></script>
 
-</div>
+</th:block>
 </html>

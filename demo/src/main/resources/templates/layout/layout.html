@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      th:fragment="layout">
+      th:fragment="layout(content)">
 
 <head>
     <meta charset="UTF-8">
@@ -11,29 +11,35 @@
           rel="stylesheet">
 </head>
 
-<body>
+<body class="bg-light">
 
-<nav class="navbar navbar-dark bg-dark">
+<!-- 상단 네비게이션 -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark shadow-sm">
     <div class="container">
-        <a class="navbar-brand" th:href="@{/}">MyBlog</a>
+        <a class="navbar-brand fw-bold" th:href="@{/}">MyBlog</a>
 
-        <div class="ms-auto">
+        <div class="ms-auto d-flex align-items-center gap-2">
             <th:block sec:authorize="isAuthenticated()">
-                <span class="text-white me-2" sec:authentication="name"></span>
+                <span class="text-white small">
+                    👤 <span sec:authentication="name"></span>
+                </span>
                 <form th:action="@{/logout}" method="post" class="d-inline">
                     <button class="btn btn-outline-light btn-sm">Logout</button>
                 </form>
             </th:block>
 
             <th:block sec:authorize="isAnonymous()">
-                <a class="btn btn-outline-light btn-sm" th:href="@{/login}">Login</a>
+                <a class="btn btn-outline-light btn-sm" th:href="@{/login}">
+                    Login
+                </a>
             </th:block>
         </div>
     </div>
 </nav>
 
-<main class="container mt-4">
-    <div th:replace="~{::content}"></div>
+<!-- 메인 영역 -->
+<main class="container my-4">
+    <th:block th:replace="${content}"></th:block>
 </main>
 
 </body>

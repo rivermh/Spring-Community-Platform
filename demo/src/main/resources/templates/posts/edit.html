@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      th:replace="layout/layout :: layout">
+      th:replace="~{layout/layout :: layout(content=~{::content})}">
 
-<div th:fragment="content">
+<th:block th:fragment="content">
 
     <h2 class="mb-4">게시글 수정</h2>
 
@@ -26,7 +26,8 @@
                       class="form-control"
                       rows="6"
                       required
-                      th:text="${post.content}"></textarea>
+                      th:text="${post.content}">
+            </textarea>
         </div>
 
         <!-- 버튼 -->
@@ -43,5 +44,5 @@
 
     </form>
 
-</div>
+</th:block>
 </html>

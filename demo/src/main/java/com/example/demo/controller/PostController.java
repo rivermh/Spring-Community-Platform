@@ -32,12 +32,13 @@ public class PostController {
 
 	// 게시글 목록
 	@GetMapping
-	public String list(@RequestParam(defaultValue = "0") int page, Model model) {
-		Page<Post> postPage = postService.getPostPage(page);
+	public String list(@RequestParam(defaultValue = "0") int page, @RequestParam(required = false) String keyword, Model model) {
+		Page<Post> postPage = postService.getPostPage(page, keyword);
 
 		model.addAttribute("postPage", postPage);
 		model.addAttribute("posts", postPage.getContent()); // 실제 게시글 목록
 		model.addAttribute("currentPage", page);
+		model.addAttribute("keyword", keyword);
 
 		return "posts/list";
 	}
@@ -115,4 +116,6 @@ public class PostController {
 	// 좋아요 DTO 정의
 	public record LikeResponse(boolean liked, long likeCount) {
 	}
+	
+	
 }

@@ -1,32 +1,54 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      th:replace="layout/layout :: layout">
+      th:replace="~{layout/layout :: layout(content=~{::content})}">
 
 <th:block th:fragment="content">
 
-    <div class="card shadow-sm mx-auto mt-5" style="max-width: 400px;">
-        <div class="card-body">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-4">
 
-            <h2 class="mb-4 text-center">로그인</h2>
+            <div class="card shadow-sm border-0 mt-5">
+                <div class="card-body p-4">
 
-            <form th:action="@{/login}" method="post">
+                    <h3 class="text-center mb-4 fw-bold">
+                        로그인
+                    </h3>
 
-                <div class="mb-3">
-                    <label class="form-label">아이디</label>
-                    <input type="text" name="username" class="form-control" required>
+                    <form th:action="@{/login}" method="post">
+
+                        <div class="mb-3">
+                            <label class="form-label">아이디</label>
+                            <input type="text"
+                                   name="username"
+                                   class="form-control"
+                                   placeholder="아이디를 입력하세요"
+                                   required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label">비밀번호</label>
+                            <input type="password"
+                                   name="password"
+                                   class="form-control"
+                                   placeholder="비밀번호를 입력하세요"
+                                   required>
+                        </div>
+
+                        <button type="submit"
+                                class="btn btn-primary w-100 mt-2">
+                            로그인
+                        </button>
+                    </form>
+
+                    <div class="text-center mt-3 small">
+                        아직 계정이 없으신가요?
+                        <a th:href="@{/register}" class="fw-semibold">
+                            회원가입
+                        </a>
+                    </div>
+
                 </div>
-
-                <div class="mb-3">
-                    <label class="form-label">비밀번호</label>
-                    <input type="password" name="password" class="form-control" required>
-                </div>
-
-                <button type="submit" class="btn btn-primary w-100">로그인</button>
-            </form>
-
-            <div class="mt-3 text-center">
-                <a th:href="@{/register}">회원가입</a>
             </div>
 
         </div>
@@ -34,7 +56,7 @@
 
     <!-- 🔔 로그인 실패 알림 -->
     <script th:if="${param.error}">
-        alert('존재하지 않는 사용자이거나 비밀번호가 올바르지 않습니다.');
+        alert('아이디 또는 비밀번호가 올바르지 않습니다.');
     </script>
 
 </th:block>

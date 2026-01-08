@@ -105,10 +105,14 @@ public class PostService {
 	}
 	
 	//페이징 처리 
-	public Page<Post> getPostPage(int page) {
+	public Page<Post> getPostPage(int page, String keyword) {
 	    Pageable pageable =
 	        PageRequest.of(page, 5, Sort.by("id").descending());
+	    
+	    if(keyword == null || keyword.isBlank()) {
+	    	return postRepository.findAllWithUser(pageable);
+	    }
 
-	    return postRepository.findAllWithUser(pageable);
+	    return postRepository.searchByTitle(keyword, pageable);
 	}
 }

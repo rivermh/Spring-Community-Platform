@@ -1,52 +1,63 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
       xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      th:replace="layout/layout :: layout">
+      th:replace="~{layout/layout :: layout(content=~{::content})}">
 
-<div th:fragment="content">
+<th:block th:fragment="content">
 
-    <div class="card shadow-sm">
-        <div class="card-body p-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
 
-            <h1 class="mb-4">My Blog</h1>
-            <p class="text-muted">
-                Spring Boot · JPA · Security 기반 블로그 프로젝트
-            </p>
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-5 text-center">
 
-            <hr>
+                    <h1 class="mb-3 fw-bold">My Blog</h1>
 
-            <!-- 로그인 안 했을 때 -->
-            <div sec:authorize="isAnonymous()">
-                <p class="mb-3">로그인 후 게시글을 작성할 수 있습니다.</p>
+                    <p class="text-muted mb-4">
+                        Spring Boot · JPA · Security 기반 블로그 프로젝트
+                    </p>
 
-                <a th:href="@{/login}" class="btn btn-primary me-2">
-                    로그인
-                </a>
-                <a th:href="@{/register}" class="btn btn-outline-secondary">
-                    회원가입
-                </a>
-            </div>
+                    <hr class="my-4">
 
-            <!-- 로그인 했을 때 -->
-            <div sec:authorize="isAuthenticated()">
-                <p class="mb-3">
-                    환영합니다,
-                    <strong sec:authentication="name"></strong> 님
-                </p>
+                    <!-- 로그인 안 했을 때 -->
+                    <div sec:authorize="isAnonymous()">
+                        <p class="mb-3">
+                            로그인 후 게시글을 작성할 수 있습니다.
+                        </p>
 
-                <div class="d-flex gap-2 mb-3">
-                    <a th:href="@{/posts}" class="btn btn-success">
-                        자유게시판
-                    </a>
+                        <div class="d-flex justify-content-center gap-2">
+                            <a th:href="@{/login}" class="btn btn-primary">
+                                로그인
+                            </a>
+                            <a th:href="@{/register}" class="btn btn-outline-secondary">
+                                회원가입
+                            </a>
+                        </div>
+                    </div>
 
-                    <a th:href="@{/mypage}" class="btn btn-outline-primary">
-                        마이페이지
-                    </a>
+                    <!-- 로그인 했을 때 -->
+                    <div sec:authorize="isAuthenticated()">
+                        <p class="mb-3">
+                            환영합니다,
+                            <strong sec:authentication="name"></strong> 님 👋
+                        </p>
+
+                        <div class="d-flex justify-content-center gap-2">
+                            <a th:href="@{/posts}" class="btn btn-success">
+                                자유게시판
+                            </a>
+
+                            <a th:href="@{/mypage}" class="btn btn-outline-primary">
+                                마이페이지
+                            </a>
+                        </div>
+                    </div>
+
                 </div>
             </div>
 
         </div>
     </div>
 
-</div>
+</th:block>
 </html>
