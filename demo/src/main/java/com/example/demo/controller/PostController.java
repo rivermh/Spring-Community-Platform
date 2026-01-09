@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.example.demo.common.PostSearchType;
 import com.example.demo.dto.PostDetailDto;
 import com.example.demo.dto.PostEditDto;
 import com.example.demo.entity.Post;
@@ -32,13 +33,18 @@ public class PostController {
 
 	// 게시글 목록
 	@GetMapping
-	public String list(@RequestParam(defaultValue = "0") int page, @RequestParam(required = false) String keyword, Model model) {
-		Page<Post> postPage = postService.getPostPage(page, keyword);
+	public String list(
+			@RequestParam(defaultValue = "0") int page,
+			@RequestParam(required = false) String keyword,
+			@RequestParam(required = false) PostSearchType searchType,
+			Model model) {
+		Page<Post> postPage = postService.getPostPage(page, searchType, keyword);
 
 		model.addAttribute("postPage", postPage);
 		model.addAttribute("posts", postPage.getContent()); // 실제 게시글 목록
 		model.addAttribute("currentPage", page);
 		model.addAttribute("keyword", keyword);
+		model.addAttribute("searchType", searchType);
 
 		return "posts/list";
 	}

@@ -17,19 +17,35 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 	@EntityGraph(attributePaths = "user")
 	List<Post> findAllByOrderByCreatedAtDesc();
 
-	
 	@EntityGraph(attributePaths = "user")
 	Optional<Post> findWithUserById(Long id);
 
-	
-	@Query("""
-		    select p from Post p
-		    join fetch p.user
-		""")
-		Page<Post> findAllWithUser(Pageable pageable);
+	@EntityGraph(attributePaths = "user")
+	@Query("select p from Post p")
+	Page<Post> findAllWithUser(Pageable pageable);
 
-	
-	// 제목 검색 (User join 포함) , join fetch p.user > N + 1 방지 
-	@Query("select p from Post p join fetch p.user " + " where p.title like %:keyword%")
+	// 제목 검색
+	@EntityGraph(attributePaths = "user")
+	@Query("""
+			    select p from Post p
+			    where p.title like %:keyword%
+			""")
 	Page<Post> searchByTitle(@Param("keyword") String keyword, Pageable pageable);
+
+	// 내용 검색
+	@EntityGraph(attributePaths = "user")
+	@Query("""
+			    select p from Post p
+			    where p.content like %:keyword%
+			""")
+	Page<Post> searchByContent(@Param("keyword") String keyword, Pageable pageable);
+
+	// 작성자(username) 검색
+	@EntityGraph(attributePaths = "user")
+	@Query("""
+			    select p from Post p
+			    where p.user.username like %:keyword%
+			""")
+	Page<Post> searchByAuthor(@Param("keyword") String keyword, Pageable pageable);
+
 }
