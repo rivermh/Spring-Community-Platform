@@ -39,6 +39,9 @@ public class User {
 	@Column(nullable = false)
 	private LocalDate birth;
 	
+	@Column(nullable = false)
+	private boolean enabled;
+	
 	//권한
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
@@ -49,12 +52,13 @@ public class User {
 	private LocalDateTime createdAt;
 	
 	@Builder
-	private User(String username, String password, String email, LocalDate birth, Role role) {
+	private User(String username, String password, String email, LocalDate birth, Role role, boolean enabled) {
 		this.username = username;
 		this.password = password;
 		this.email = email;
 		this.birth = birth;
 		this.role = role;
+		this.enabled = enabled;
 	}
 	
 	//최초 저장 시 자동으로 생성 시간 세팅
