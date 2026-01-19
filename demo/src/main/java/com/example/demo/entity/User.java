@@ -27,18 +27,23 @@ public class User {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	// username (Id)
 	@Column(nullable = false, unique = true, length = 50)
 	private String username;
 	
+	// 비밀번호
 	@Column(nullable = false)
 	private String password;
 	
+	// 이메일
 	@Column(nullable = false, unique = true)
 	private String email;
 	
+	// 생년월일
 	@Column(nullable = false)
 	private LocalDate birth;
 	
+	// 이메일 인증 전엔 enabled = false
 	@Column(nullable = false)
 	private boolean enabled;
 	
