@@ -1,6 +1,5 @@
 package com.example.demo.controller;
 
-import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -125,6 +124,4 @@ public class PostController {
 	// 좋아요 DTO 정의
 	public record LikeResponse(boolean liked, long likeCount) {
 	}
-	
-	
 }

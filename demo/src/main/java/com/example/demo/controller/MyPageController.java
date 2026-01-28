@@ -4,7 +4,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,6 +28,7 @@ public class MyPageController {
 	private final CommentService commentService;
 	private final PostLikeService postLikeService;
 
+	// 마이페이지 조회
 	@GetMapping("/mypage")
 	public String myPage(@AuthenticationPrincipal CustomUserDetails userDetails, Model model) {
 		// 로그인 안 된 상태 방어
