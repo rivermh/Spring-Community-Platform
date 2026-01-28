@@ -15,7 +15,8 @@ public class SecurityConfig {
 
 	private final CustomUserDetailsService customUserDetailsService;
 	private final CustomAuthenticationFailureHandler failureHandler;
-
+	private final CustomLoginSuccessHandler successHandler;
+	
 	
 	//비밀번호 암호화기 (BCrypt)
 	@Bean
@@ -39,6 +40,7 @@ public class SecurityConfig {
 							"/register",
 					        "/users/check-username",
 					        "/users/check-email",
+					        "/account/**",
 					        "/verify-email",
 							"/css/**",
 							"/js/**"
@@ -52,7 +54,7 @@ public class SecurityConfig {
 					.loginProcessingUrl("/login")
 					.usernameParameter("username")
 					.passwordParameter("password")
-					.defaultSuccessUrl("/", true)
+					.successHandler(successHandler)
 					.failureHandler(failureHandler)
 			)
 			

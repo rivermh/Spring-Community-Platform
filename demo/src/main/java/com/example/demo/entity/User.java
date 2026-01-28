@@ -3,6 +3,8 @@ package com.example.demo.entity;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
+import com.example.demo.common.UserStatus;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -51,19 +53,24 @@ public class User {
 	@Enumerated(EnumType.STRING)
 	@Column(nullable = false)
 	private Role role;
+	
+	@Enumerated(EnumType.STRING)
+	@Column(nullable = false)
+	private UserStatus status;
 	 
 	//가입일
 	@Column(nullable = false, updatable = false)
 	private LocalDateTime createdAt;
 	
 	@Builder
-	private User(String username, String password, String email, LocalDate birth, Role role, boolean enabled) {
+	private User(String username, String password, String email, LocalDate birth, Role role, boolean enabled, UserStatus status) {
 		this.username = username;
 		this.password = password;
 		this.email = email;
 		this.birth = birth;
 		this.role = role;
 		this.enabled = enabled;
+		this.status = status;
 	}
 	
 	//최초 저장 시 자동으로 생성 시간 세팅
@@ -82,14 +89,28 @@ public class User {
 		this.email = email;
 	}
 	
-	// 이메일 인증 완료 시 계정 활성화
+	// 이메일 인증 완료
 	public void activate() {
+	    this.status = UserStatus.ACTIVE;
 	    this.enabled = true;
 	}
 
-	// 회원 탈퇴 처리
-	public void deactivate() {
-		this.enabled = false;
+	// 이메일 미인증
+	public void markInactive() {
+	    this.status = UserStatus.INACTIVE;
+	    this.enabled = false;
+	}
+
+	// 회원 탈퇴
+	public void withdraw() {
+	    this.status = UserStatus.WITHDRAWN;
+	    this.enabled = false;
+	}
+	
+	// 회원 복구
+	public void restore() {
+	    this.status = UserStatus.ACTIVE;
+	    this.enabled = true;
 	}
 }
 

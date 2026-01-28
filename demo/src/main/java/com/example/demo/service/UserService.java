@@ -8,6 +8,7 @@ import java.util.UUID;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import com.example.demo.common.UserStatus;
 import com.example.demo.entity.EmailVerificationToken;
 import com.example.demo.entity.Role;
 import com.example.demo.entity.User;
@@ -76,7 +77,8 @@ public class UserService {
 				.email(email)
 				.birth(birth)
 				.role(Role.USER) // 기본 권한
-				.enabled(false)
+				.status(UserStatus.INACTIVE) // 이메일 미인증
+				.enabled(false) // 로그인 차단
 				.build();
 		
 		// 8. 저장
@@ -114,6 +116,29 @@ public class UserService {
 		User user = userRepository.findByUsername(username)
 				.orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
 		
-		user.deactivate(); // enabled = false
+		user.withdraw(); // status = WITHDRAWN, enabled = false
+	}
+	
+	// 탈퇴 유저 복구
+	@Transactional
+	public void restoreUser(String username, String password) { // 인자 추가
+
+	    // 1. 사용자 조회
+	    User user = userRepository.findByUsername(username)
+	        .orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
+
+	    // 2. 탈퇴 계정인지 확인
+	    if (user.getStatus() != UserStatus.WITHDRAWN) {
+	        throw new IllegalStateException("복구 대상 계정이 아닙니다.");
+	    }
+
+	    // 3. 비밀번호 일치 확인 (중요!)
+	    // rawPassword(입력값)와 encodedPassword(DB값)를 비교합니다.
+	    if (!passwordEncoder.matches(password, user.getPassword())) {
+	        throw new IllegalArgumentException("비밀번호가 일치하지 않습니다.");
+	    }
+
+	    // 4. 복구 진행
+	    user.restore();
 	}
 }

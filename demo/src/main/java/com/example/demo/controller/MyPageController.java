@@ -17,6 +17,7 @@ import com.example.demo.service.PostLikeService;
 import com.example.demo.service.PostService;
 import com.example.demo.service.UserService;
 
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 
 @Controller
@@ -75,15 +76,16 @@ public class MyPageController {
 
 	//탈퇴 처리 
 	@PostMapping("/mypage/withdraw")
-	public String withdraw(@AuthenticationPrincipal CustomUserDetails userDetails) {
+	public String withdraw(@AuthenticationPrincipal CustomUserDetails userDetails, HttpServletRequest request) {
 		if(userDetails == null) {
 			return "redirect:/login";
 		}
 		
 		userService.withdraw(userDetails.getUsername());
 		
-		//세션/인증 정보 제거
+		//세션/인증 정보 제거 , 강제 로그아웃
 		SecurityContextHolder.clearContext();
+		request.getSession().invalidate();
 		
 		return "redirect:/login?withdraw";
 	}

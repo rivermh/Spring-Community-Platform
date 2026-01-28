@@ -8,3 +8,4 @@ public enum PostSortType {
 	OLDEST, // 오래된순
 	TITLE // 제목순
 }
+ 

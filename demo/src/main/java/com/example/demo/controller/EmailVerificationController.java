@@ -50,6 +50,7 @@ public class EmailVerificationController {
 
         // 4️ 인증 처리
         user.activate();          // enabled = true
+        
         userRepository.save(user);
         tokenRepository.delete(verificationToken);
 
