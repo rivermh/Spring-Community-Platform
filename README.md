@@ -98,7 +98,7 @@ src/main/java/com/example/demo/
 │   └── BaseTimeEntity.java     # 作成/修正時間の共通管理 (공통 생성/수정 시간 관리)
 ├── config/                     # システム設定 (시스템 설정)
 │   └── SecurityConfig.java     # Spring Security設定及びパスセキュリティ (보안 설정)
-├── exception/                  # 例외 처리 (예외 처리)
+├── exception/                  # 例外処理 (예외 처리)
 │   ├── GlobalExceptionHandler.java # 全域例外ハンドリング (전역 예외 처리)
 │   └── ErrorResponse.java      # 共通エラーレスポンス規格 (공통 에러 응답 규격)
 ├── security/                   # 認証・認可のロジック (인증 및 인가 로직)
