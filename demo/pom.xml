@@ -10,11 +10,11 @@
         <version>3.2.5</version>
         <relativePath/>
     </parent>
-	<groupId>com.example</groupId>
-	<artifactId>demo</artifactId>
+	<groupId>com.community</groupId>
+	<artifactId>platform</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>demo</name>
-	<description>demo project for Spring Boot</description>
+	<name>CommunityPlatform</name>
+	<description>Community Platform Project for Portfolio</description>
 	<url/>
 	<licenses>
 		<license/>
