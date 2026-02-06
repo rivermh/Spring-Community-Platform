@@ -79,7 +79,7 @@ public class User {
 		this.createdAt = LocalDateTime.now();
 	}
 	
-	// changePassword
+	// changePassword (비밀번호 변경)
 	public void changePassword(String password) {
 		this.password = password;
 	}
