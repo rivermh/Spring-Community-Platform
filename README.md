@@ -78,11 +78,58 @@
 ## ■ Project Structure
 
 ```text
-com.example.demo
-├── common/         # 共通Enum (UserStatus, Role)
-├── config/         # Security, Web設定
-├── email/          # 非同期メール送信 & 認証トークン
-├── post/           # 投稿・いいねドメイン
-├── comment/        # コメントドメイン
-├── user/           # ユーザー管理、マイページ、アカウント復旧
-└── exception/      # GlobalExceptionHandlerによる例外処理
+src/main/java/com/example/demo/
+├── common/                     # 共通データ及び規格 (공통 데이터 및 규격)
+│   ├── UserStatus.java         # ユーザー状態 (유저 상태: ACTIVE, INACTIVE, WITHDRAWN)
+│   └── BaseTimeEntity.java     # 作成/修正時間の共通管理 (공통 생성/수정 시간 관리)
+├── config/                     # システム設定 (시스템 설정)
+│   └── SecurityConfig.java     # Spring Security設定及びパスセキュリティ (보안 설정)
+├── exception/                  # 例外処理 (예외 처리)
+│   ├── GlobalExceptionHandler.java # 全域例外ハンドリング (전역 예외 처리)
+│   └── ErrorResponse.java      # 共通エラーレスポンス規格 (공통 에러 응답 규격)
+├── security/                   # 認証・認可のロジック (인증 및 인가 로직)
+│   ├── CustomUserDetails.java  # Security専用ユーザーオブジェクト (보안 전용 유저 객체)
+│   ├── CustomUserDetailsService.java # DB連動認証サービス (DB 연동 인증 서비스)
+│   ├── CustomLoginSuccessHandler.java # ログイン成功時の状態検証 (로그인 성공 핸들러)
+│   └── CustomLoginFailureHandler.java # ログイン失敗時の事由別ハンドリング (로그인 실패 핸들러)
+├── email/                      # メール認証ドメイン (이메일 인증 도메인)
+│   ├── entity/
+│   │   └── EmailVerificationToken.java # 認証トークンエンティティ (인증 토큰 엔티티)
+│   ├── repository/
+│   │   └── EmailVerificationTokenRepository.java
+│   └── service/
+│       └── MailService.java    # SMTPを利用したメール送信 (메일 발송 서비스)
+├── post/                       # 投稿及びいいねドメイン (게시글 및 좋아요 도메인)
+│   ├── controller/
+│   │   └── PostController.java
+│   ├── entity/
+│   │   ├── Post.java
+│   │   └── PostLike.java       # 投稿とユーザーのN:M連結 (게시글-유저 연결 엔티티)
+│   ├── repository/
+│   │   ├── PostRepository.java # @EntityGraphによる最適化 (Fetch Join 적용)
+│   │   └── PostLikeRepository.java
+│   └── service/
+│       ├── PostService.java
+│       └── PostLikeService.java
+├── comment/                    # コメントドメイン (댓글 도메인)
+│   ├── controller/
+│   │   └── CommentController.java
+│   ├── entity/
+│   │   └── Comment.java
+│   ├── repository/
+│   │   └── CommentRepository.java
+│   └── service/
+│       └── CommentService.java
+└── user/                       # ユーザー及びマイページ (유저 및 마이페이지)
+    ├── controller/
+    │   ├── AccountController.java  # アカウント復旧及び認証管理 (계정 복구 및 인증)
+    │   ├── AuthController.java     # 会員登録及びログインページ (회원가입 및 로그인)
+    │   ├── MyPageController.java   # 活動履歴の照会及び退会 (활동 조회 및 탈퇴)
+    │   └── UserCheckController.java # 重複チェック(REST API) (중복 체크)
+    ├── entity/
+    │   ├── User.java               # ユーザー基幹エンティティ (유저 핵심 엔티티)
+    │   └── Role.java               # 権限区分 (권한 구분: USER, ADMIN)
+    ├── repository/
+    │   └── UserRepository.java
+    └── service/
+        └── UserService.java        # 会員登録、退会、復旧ロジック (회원 관리 로직)
