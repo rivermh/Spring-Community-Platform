@@ -9,7 +9,7 @@
 
 | Category | Tech Stack |
 | :--- | :--- |
-| **Framework** | **Spring Boot 3.x**, Spring Security |
+| **Framework** | **Spring Boot 3.2.5**, Spring Security |
 | **Persistence** | **Spring Data JPA**, H2 / MySQL |
 | **Template** | **Thymeleaf**, JavaScript (Fetch API) |
 | **Library** | **Lombok**, Java Mail Sender |
