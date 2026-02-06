@@ -47,6 +47,6 @@ public class CustomAuthenticationFailureHandler
 	            "/login?error=" +
 	            java.net.URLEncoder.encode(errorMessage, "UTF-8")
 	    );
-	}
+	} 
 }
 
