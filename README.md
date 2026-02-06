@@ -87,7 +87,7 @@
 - **Comment**: 投稿に対する返信。UserおよびPostと関連付け。
 - **PostLike**: 重複防止のため、UserとPostの組み合わせにユニーク制約を適用。
 
-> ![ERD](./docs/erd.png) ---
+---
 
 ## ■ Project Structure (한일 병행 상세)
 
