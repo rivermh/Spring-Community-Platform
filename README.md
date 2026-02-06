@@ -9,7 +9,7 @@ Spring Boot와 JPA를 활용한 게시판 기반 웹 애플리케이션입니다
 - Spring Data JPA
 - Thymeleaf
 - MySQL
-- Gradle
+- Maven
 
 ## Core Features (Post)
 - 게시글 CRUD
