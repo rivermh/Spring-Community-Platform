@@ -63,7 +63,7 @@
 
 ### 03. 共通例外ハンドリング (공통 예외 처리)
 - **課題 (Problem)**: 各コントローラーでの例外処理の重複と、一貫性のないエラーレスポンス形式によるフロントエンドの開発効率低下。
-- **解決 (Solution)**: `@RestControllerAdvice` を利用した `GlobalExceptionHandler` を実装し、すべての例外を `ErrorResponse` オブ젝트に統一。
+- **解決 (Solution)**: `@RestControllerAdvice` を利用した `GlobalExceptionHandler` を実装し、すべての例外を `ErrorResponse` オブジェクトに統一。
 - **結果 (Result)**: エラーハンドリングの構造化により、開発生産性と保守性が向上。
 
 ---
