@@ -11,7 +11,7 @@ public class GlobalExceptionHandler {
 	public String handleSecurityException(SecurityException e, Model model) {
 		model.addAttribute("message", e.getMessage());
 		return "error/403";
-	}
+	}  
 	
 	@ExceptionHandler(IllegalArgumentException.class)
 	public String handleIllegalArgumentException(IllegalArgumentException e, Model model) {
