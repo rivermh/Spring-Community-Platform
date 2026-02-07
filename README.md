@@ -92,7 +92,7 @@
 ## ■ Project Structure (한일 병행 상세)
 
 ```text
-src/main/java/com/example/demo/
+src/main/java/com/community/platform/
 ├── common/                     # 共通データ及び規格 (공통 데이터 및 규격)
 │   ├── UserStatus.java         # ユーザー状態 (유저 상태: ACTIVE, INACTIVE, WITHDRAWN)
 │   └── BaseTimeEntity.java     # 作成/修正時間の共通管理 (공통 생성/수정 시간 관리)
