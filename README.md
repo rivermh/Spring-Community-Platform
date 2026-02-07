@@ -63,7 +63,7 @@
 
 ### 03. 共通例外ハンドリング (공통 예외 처리)
 - **課題 (Problem)**: 各コントローラーでの例外処理の重複と、一貫性のないエラーレスポンス形式によるフロントエンドの開発効率低下。
-- **解決 (Solution)**: `@RestControllerAdvice` を利用した `GlobalExceptionHandler` を実装し、すべての例外を `ErrorResponse` オブ젝트に統一。
+- **解決 (Solution)**: `@RestControllerAdvice` を利用した `GlobalExceptionHandler` を実装し、すべての例外を `ErrorResponse` オブジェクトに統一。
 - **結果 (Result)**: エラーハンドリングの構造化により、開発生産性と保守性が向上。
 
 ---
@@ -98,7 +98,7 @@ src/main/java/com/example/demo/
 │   └── BaseTimeEntity.java     # 作成/修正時間の共通管理 (공통 생성/수정 시간 관리)
 ├── config/                     # システム設定 (시스템 설정)
 │   └── SecurityConfig.java     # Spring Security設定及びパスセキュリティ (보안 설정)
-├── exception/                  # 例외 처리 (예외 처리)
+├── exception/                  # 例外処理 (예외 처리)
 │   ├── GlobalExceptionHandler.java # 全域例外ハンドリング (전역 예외 처리)
 │   └── ErrorResponse.java      # 共通エラーレスポンス規格 (공통 에러 응답 규격)
 ├── security/                   # 認証・認可のロジック (인증 및 인가 로직)
