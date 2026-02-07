@@ -95,18 +95,19 @@
 src/main/java/com/community/platform/
 ├── common/                     # 共通データ及び規格 (공통 데이터 및 규격)
 │   ├── UserStatus.java         # ユーザー状態 (유저 상태: ACTIVE, INACTIVE, WITHDRAWN)
-│   └── BaseTimeEntity.java     # 作成/修正時間の共通管理 (공통 생성/수정 시간 관리)
-├── config/                     # システム設定 (시스템 설정)
-│   └── SecurityConfig.java     # Spring Security設定及びパスセキュリティ (보안 설정)
+│   └── PostSortType.java	       # LATEST, OLDEST, TITLE
+│   └── PostSearchType.java	# TITLE, CONTENT, AUTHOR
 ├── exception/                  # 例外処理 (예외 처리)
 │   ├── GlobalExceptionHandler.java # 全域例外ハンドリング (전역 예외 처리)
-│   └── ErrorResponse.java      # 共通エラーレスポンス規格 (공통 에러 응답 규격)
 ├── security/                   # 認証・認可のロジック (인증 및 인가 로직)
 │   ├── CustomUserDetails.java  # Security専用ユーザーオブジェクト (보안 전용 유저 객체)
 │   ├── CustomUserDetailsService.java # DB連動認証サービス (DB 연동 인증 서비스)
 │   ├── CustomLoginSuccessHandler.java # ログイン成功時の状態検証 (로그인 성공 핸들러)
 │   └── CustomLoginFailureHandler.java # ログイン失敗時の事由別ハンドリング (로그인 실패 핸들러)
+│   └── SecurityConfig.java     # Spring Security設定及びパスセキュリティ (보안 설정)
 ├── email/                      # メール認証ドメイン (이메일 인증 도메인)
+│   ├── controller/
+│   │   └── EmailVerificationController
 │   ├── entity/
 │   │   └── EmailVerificationToken.java # 認証トークンエンティティ (인증 토큰 엔티티)
 │   ├── repository/
@@ -116,6 +117,9 @@ src/main/java/com/community/platform/
 ├── post/                       # 投稿及びいいねドメイン (게시글 및 좋아요 도메인)
 │   ├── controller/
 │   │   └── PostController.java
+│   ├── dto/
+│   │   ├── PostDetailDto.java
+│   │   ├── PostEditDto.java
 │   ├── entity/
 │   │   ├── Post.java
 │   │   └── PostLike.java       # 投稿とユーザーのN:M連結 (게시물-유저 연결 엔티티)
@@ -128,6 +132,10 @@ src/main/java/com/community/platform/
 ├── comment/                    # コメントドメイン (댓글 도메인)
 │   ├── controller/
 │   │   └── CommentController.java
+│   ├── dto/
+│   │   ├── CommentCreateDto.java
+│   │   ├── CommentResponseDto.java
+│   │   ├── CommentUpdateDto.java
 │   ├── entity/
 │   │   └── Comment.java
 │   ├── repository/
@@ -138,6 +146,7 @@ src/main/java/com/community/platform/
     ├── controller/
     │   ├── AccountController.java  # アカウント復旧及び認証管理 (계정 복구 및 인증)
     │   ├── AuthController.java     # 会員登録及びログインページ (회원가입 및 로그인)
+    │   ├── LoginController.java   # @GetMapping("/login")		
     │   ├── MyPageController.java   # 活動履歴の照会及び退会 (활동 조회 및 탈퇴)
     │   └── UserCheckController.java # 重複チェック(REST API) (중복 체크)
     ├── entity/
