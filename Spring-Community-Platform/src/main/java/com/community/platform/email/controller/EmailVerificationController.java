@@ -10,6 +10,7 @@ import com.community.platform.email.entity.EmailVerificationToken;
 import com.community.platform.email.repository.EmailVerificationTokenRepository;
 import com.community.platform.user.entity.User;
 import com.community.platform.user.repository.UserRepository;
+import com.community.platform.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -20,6 +21,7 @@ public class EmailVerificationController {
 
     private final EmailVerificationTokenRepository tokenRepository;
     private final UserRepository userRepository;
+    private final UserService userService;
 
     @GetMapping("/verify-email")
     public String verify(@RequestParam String token, Model model) {
@@ -55,6 +57,18 @@ public class EmailVerificationController {
         tokenRepository.delete(verificationToken);
 
         model.addAttribute("message", "이메일 인증이 완료되었습니다. 로그인해주세요.");
+        return "email/verify-result";
+    }
+    
+    @GetMapping("/resend-verification")
+    public String resend(@RequestParam("username") String username, Model model) {
+        try {
+            userService.resendVerificationEmail(username);
+            model.addAttribute("message", "인증 메일이 성공적으로 재발송되었습니다.");
+        } catch (Exception e) {
+            System.out.println("디버깅 에러: " + e.getMessage());
+            model.addAttribute("message", "오류 발생: " + e.getMessage());
+        }
         return "email/verify-result";
     }
 }

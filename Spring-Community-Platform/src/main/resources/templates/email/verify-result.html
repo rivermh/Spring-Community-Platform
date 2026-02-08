@@ -1,14 +1,43 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>이메일 인증</title>
-</head>
-<body>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout/layout :: layout(content=~{::content})}">
 
-<h2 th:text="${message}">이메일 인증 결과</h2>
+<th:block th:fragment="content">
 
-<a th:href="@{/login}">로그인 하러 가기</a>
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
 
-</body>
+            <div class="card shadow-sm border-0">
+                <div class="card-body p-5 text-center">
+
+                    <div class="mb-3 text-primary">
+                        <i class="bi bi-envelope-check" style="font-size: 3rem;"></i>
+                    </div>
+
+                    <h2 class="mb-3 fw-bold">Email Verification</h2>
+
+                    <hr class="my-4">
+
+                    <p class="fs-5 mb-4 text-dark" th:text="${message}">
+                        인증 결과 메시지가 여기에 표시됩니다.
+                    </p>
+
+                    <div class="d-flex justify-content-center gap-2 mt-4">
+                        <a th:href="@{/login}" class="btn btn-primary px-4">
+                            로그인 하러 가기
+                        </a>
+                        
+                        <a th:href="@{/}" class="btn btn-outline-secondary px-4">
+                            홈으로
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+</th:block>
 </html>
