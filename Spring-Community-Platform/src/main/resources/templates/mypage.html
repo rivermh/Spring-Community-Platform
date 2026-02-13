@@ -13,6 +13,11 @@
 
 					<h3 class="text-center fw-bold mb-4">mypage</h3>
 
+					<!-- 비밀번호 변경 성공 메시지 -->
+					<div th:if="${param.passwordChanged}"
+						class="alert alert-success text-center">비밀번호가 성공적으로 변경되었습니다.
+					</div>
+
 					<div class="mb-3">
 						<div class="d-flex justify-content-between">
 							<span class="text-muted">아이디</span> <span class="fw-semibold"
@@ -60,7 +65,9 @@
 							내가 쓴 글 </a> <a th:href="@{/mypage/comments}"
 							class="btn btn-outline-primary"> 내가 쓴 댓글 </a> <a
 							th:href="@{/mypage/likes}" class="btn btn-outline-primary">
-							좋아요한 글 </a>
+							좋아요한 글 </a> <a th:href="@{/mypage/password}"
+							class="btn btn-outline-warning"> 비밀번호 변경 </a>
+
 					</div>
 
 					<form th:action="@{/mypage/withdraw}" method="post"

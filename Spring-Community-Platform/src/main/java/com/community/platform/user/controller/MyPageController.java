@@ -89,4 +89,49 @@ public class MyPageController {
 		
 		return "redirect:/login?withdraw";
 	}
+	
+	// 비밀번호 변경 페이지 (GET)
+	@GetMapping("/mypage/password")
+	public String changePasswordForm(@AuthenticationPrincipal CustomUserDetails userDetails) {
+		if (userDetails == null) {
+			return "redirect:/login";
+		}
+		return "mypage/password";
+	}
+
+	// 비밀번호 변경 처리(POST)
+	@PostMapping("/mypage/password")
+	public String changePassword(
+			@AuthenticationPrincipal CustomUserDetails userDetails,
+			String currentPassword,
+			String newPassword,
+			String confirmPassword,
+			Model model) {
+
+		if (userDetails == null) {
+			return "redirect:/login";
+		}
+
+		// 1. 새 비밀번호 확인
+		if (!newPassword.equals(confirmPassword)) {
+			model.addAttribute("error", "새 비밀번호가 일치하지 않습니다.");
+			return "mypage/password";
+		}
+
+		try {
+			// 2. 서비스 호출
+			userService.changePassword(
+					userDetails.getUsername(),
+					currentPassword,
+					newPassword
+			);
+		} catch (IllegalArgumentException | IllegalStateException e) {
+			model.addAttribute("error", e.getMessage());
+			return "mypage/password";
+		}
+
+		// 3. 성공 시
+		return "redirect:/mypage?passwordChanged";
+	}
+
 }

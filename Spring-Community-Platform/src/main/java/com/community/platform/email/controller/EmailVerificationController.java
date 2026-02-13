@@ -60,6 +60,7 @@ public class EmailVerificationController {
         return "email/verify-result";
     }
     
+    // 이메일 재전송
     @GetMapping("/resend-verification")
     public String resend(@RequestParam("username") String username, Model model) {
         try {

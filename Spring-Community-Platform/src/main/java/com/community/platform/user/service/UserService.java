@@ -130,7 +130,7 @@ public class UserService {
 
 	// 탈퇴 유저 복구
 	@Transactional
-	public void restoreUser(String username, String password) { // 인자 추가
+	public void restoreUser(String username, String password) {
 
 		// 1. 사용자 조회
 		User user = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
@@ -149,4 +149,41 @@ public class UserService {
 		// 4. 복구 진행
 		user.restore();
 	}
+
+	// 비밀번호 변경
+	@Transactional
+	public void changePassword(String username, String currentPassword, String newPassword) {
+
+		// 1. 사용자 조회
+		User user = userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("사용자 없음"));
+
+		// 2. 탈퇴 / 비활성 계정 방어
+		if (user.getStatus() == UserStatus.WITHDRAWN) {
+			throw new IllegalStateException("탈퇴한 계정은 비밀번호를 변경할 수 없습니다.");
+		}
+
+		if (!user.isEnabled()) {
+			throw new IllegalStateException("이메일 인증이 완료되지 않은 계정입니다.");
+		}
+
+		// 3. 현재 비밀번호 검증
+		if (!passwordEncoder.matches(currentPassword, user.getPassword())) {
+			throw new IllegalArgumentException("현재 비밀번호가 일치하지 않습니다.");
+		}
+
+		// 4. 새 비밀번호 형식 검증 (회원가입과 동일한 규칙)
+		if (!newPassword.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d!@#$%^&*()_+=-]{8,}$")) {
+			throw new IllegalStateException("비밀번호는 8자 이상, 영문과 숫자를 포함해야 합니다.");
+		}
+
+		// 5. 기존 비밀번호와 동일한지 체크 
+		if (passwordEncoder.matches(newPassword, user.getPassword())) {
+			throw new IllegalStateException("기존 비밀번호와 다른 비밀번호를 사용해주세요.");
+		}
+
+		// 6. 암호화 후 변경
+		String encodedNewPassword = passwordEncoder.encode(newPassword);
+		user.changePassword(encodedNewPassword);
+	}
+
 }
