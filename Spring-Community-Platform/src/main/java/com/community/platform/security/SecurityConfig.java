@@ -43,6 +43,7 @@ public class SecurityConfig {
 					        "/account/**",
 					        "/verify-email",
 					        "/resend-verification",
+					        "/reset-password",
 							"/css/**",
 							"/js/**"
 					).permitAll()

@@ -106,7 +106,8 @@ public class MyPageController {
 			String currentPassword,
 			String newPassword,
 			String confirmPassword,
-			Model model) {
+			Model model,
+			HttpServletRequest request) {
 
 		if (userDetails == null) {
 			return "redirect:/login";
@@ -129,9 +130,13 @@ public class MyPageController {
 			model.addAttribute("error", e.getMessage());
 			return "mypage/password";
 		}
+		
+		// 3. 강제 로그아웃 처리
+		SecurityContextHolder.clearContext();
+		request.getSession().invalidate();
 
-		// 3. 성공 시
-		return "redirect:/mypage?passwordChanged";
+		// 4. 로그인 페이지로 이동 + 메시지
+		return "redirect:/login?passwordChanged";
 	}
 
 }

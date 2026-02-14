@@ -186,4 +186,50 @@ public class UserService {
 		user.changePassword(encodedNewPassword);
 	}
 
+	// 이메일로 유저 찾고 비밀번호 변경까지
+	@Transactional
+	public void sendPasswordResetLink(String email) {
+	    // 1. 이메일로 유저 찾기
+	    User user = userRepository.findByEmail(email)
+	            .orElseThrow(() -> new IllegalArgumentException("해당 이메일로 가입된 사용자가 없습니다."));
+
+	    // 2. 기존 토큰 삭제 
+	    tokenRepository.deleteByUser(user);
+
+	    // 3. 새 토큰 생성
+	    String token = UUID.randomUUID().toString();
+	    EmailVerificationToken resetToken = EmailVerificationToken.builder()
+	            .token(token)
+	            .user(user)
+	            .expiryDate(LocalDateTime.now().plusMinutes(30)) // 30분 유효
+	            .build();
+	    tokenRepository.save(resetToken);
+
+	    // 4. 메일 발송
+	    mailService.sendPasswordResetMail(user.getEmail(), token);
+	}
+	
+	@Transactional
+	public void resetPasswordByToken(String token, String newPassword) {
+	    // 1. 토큰 검증 (EmailVerificationService를 주입받아 쓰거나 직접 조회)
+	    EmailVerificationToken verificationToken = tokenRepository.findByToken(token)
+	            .orElseThrow(() -> new IllegalArgumentException("유효하지 않은 접근입니다."));
+
+	    if (verificationToken.isExpired()) {
+	        throw new IllegalStateException("인증 시간이 만료되었습니다.");
+	    }
+
+	    // 2. 유저 가져오기
+	    User user = verificationToken.getUser();
+
+	    // 3. 새 비밀번호 암호화 및 설정 
+	    if (!newPassword.matches("^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d!@#$%^&*()_+=-]{8,}$")) {
+	        throw new IllegalStateException("비밀번호는 8자 이상, 영문과 숫자를 포함해야 합니다.");
+	    }
+	    
+	    user.changePassword(passwordEncoder.encode(newPassword));
+
+	    // 4. 사용한 토큰 삭제
+	    tokenRepository.delete(verificationToken);
+	}
 }
