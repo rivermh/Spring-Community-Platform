@@ -1,91 +1,100 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-	th:replace="~{layout/layout :: layout(content=~{::content})}">
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout/layout :: layout(content=~{::content})}">
 
 <th:block th:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-md-7 col-lg-5">
 
-	<div class="row justify-content-center">
-		<div class="col-md-7 col-lg-5">
+            <div class="card shadow-sm border-0 mt-5 rounded-4">
+                <div class="card-body p-4 p-md-5">
 
-			<div class="card shadow-sm border-0 mt-5">
-				<div class="card-body p-4">
+                    <div class="text-center mb-4">
+                        <h3 class="fw-bold text-dark">회원가입</h3>
+                        <p class="text-muted small">새로운 커뮤니티의 가족이 되어주세요!</p>
+                    </div>
 
-					<h3 class="text-center mb-4 fw-bold">회원가입</h3>
+                    <div th:if="${message}" class="alert alert-success border-0 small text-center shadow-sm mb-4" th:text="${message}"></div>
+                    <div th:if="${error}" class="alert alert-danger border-0 small text-center shadow-sm mb-4" th:text="${error}"></div>
 
-					<div th:if="${message}" class="alert alert-success">
-						[[${message}]]</div>
+                    <form th:action="@{/register}" method="post">
 
-					<div th:if="${error}" class="alert alert-danger">
-						[[${error}]]</div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold small text-muted">아이디</label>
+                            <div class="input-group">
+                                <input type="text" id="username" name="username"
+                                       class="form-control bg-light border-0 py-2 px-3 rounded-start-3" 
+                                       placeholder="아이디를 입력하세요" required>
+                                <button type="button" id="username-check-btn"
+                                        class="btn btn-dark px-3 rounded-end-3 fw-bold small">중복확인</button>
+                            </div>
+                            <div class="ps-1 mt-1"><small id="username-msg" class="fw-medium"></small></div>
+                        </div>
 
-					<form th:action="@{/register}" method="post">
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold small text-muted">비밀번호</label>
+                            <input type="password" name="password" 
+                                   class="form-control bg-light border-0 py-2 px-3 rounded-3" 
+                                   placeholder="영문, 숫자 포함 8자 이상" required>
+                            <div class="ps-1 mt-1"><small id="password-msg" class="fw-medium"></small></div>
+                        </div>
 
-						<div class="mb-3">
-							<label class="form-label">아이디</label>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold small text-muted">비밀번호 확인</label>
+                            <input type="password" id="password-confirm" 
+                                   class="form-control bg-light border-0 py-2 px-3 rounded-3"
+                                   placeholder="비밀번호를 한 번 더 입력하세요" required>
+                            </div>
 
-							<div class="input-group">
-								<input type="text" id="username" name="username"
-									class="form-control" placeholder="아이디를 입력하세요" required>
-								<button type="button" id="username-check-btn"
-									class="btn btn-outline-secondary">중복확인</button>
-							</div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold small text-muted">이메일</label>
+                            <div class="input-group">
+                                <input type="email" id="email" name="email" 
+                                       class="form-control bg-light border-0 py-2 px-3 rounded-start-3"
+                                       placeholder="example@email.com" required>
+                                <button type="button" id="email-check-btn"
+                                        class="btn btn-dark px-3 rounded-end-3 fw-bold small">중복확인</button>
+                            </div>
+                            <div class="ps-1 mt-1"><small id="email-msg" class="fw-medium"></small></div>
+                        </div>
 
-							<small id="username-msg"></small>
-						</div>
+                        <div class="mb-4">
+                            <label class="form-label fw-semibold small text-muted">생년월일</label>
+                            <input type="date" name="birth" 
+                                   class="form-control bg-light border-0 py-2 px-3 rounded-3" required>
+                        </div>
 
-						<div class="mb-3">
-							<label class="form-label">비밀번호</label> <input type="password"
-								name="password" class="form-control" required> <small
-								id="password-msg"></small>
-						</div>
+                        <button type="submit" id="submit-btn"
+                                class="btn btn-primary w-100 py-3 mt-2 rounded-pill fw-bold shadow-sm">
+                            가입하기
+                        </button>
+                    </form>
 
-						<div class="mb-3">
-							<label class="form-label">비밀번호 확인</label> <input type="password"
-								id="password-confirm" class="form-control"
-								placeholder="비밀번호를 다시 입력하세요" required> <small
-								id="password-msg"></small>
-						</div>
+                    <hr class="my-4 opacity-25">
 
+                    <div class="text-center small">
+                        <span class="text-muted">이미 계정이 있으신가요?</span>
+                        <a th:href="@{/login}" class="fw-bold text-primary text-decoration-none ms-1">로그인</a>
+                    </div>
 
-						<div class="mb-3">
-							<label class="form-label">이메일</label>
+                </div>
+            </div>
 
-							<div class="input-group">
-								<input type="email" id="email" name="email" class="form-control"
-									placeholder="example@email.com" required>
-								<button type="button" id="email-check-btn"
-									class="btn btn-outline-secondary">중복확인</button>
-							</div>
+        </div>
+    </div>
+    
+    <style>
+        .form-control:focus {
+            background-color: #fff !important;
+            box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.1) !important;
+            border: 1px solid #0d6efd !important;
+        }
+        /* JS 메시지 컬러 스타일링 */
+        .text-success { color: #198754 !important; }
+        .text-danger { color: #dc3545 !important; }
+    </style>
 
-							<small id="email-msg"></small>
-						</div>
-
-						<div class="mb-3">
-							<label class="form-label">생년월일</label> <input type="date"
-								name="birth" class="form-control" required>
-						</div>
-
-
-						<button type="submit" id="submit-btn"
-							class="btn btn-primary w-100 mt-2">가입하기</button>
-					</form>
-
-					<div class="text-center mt-3 small">
-						이미 계정이 있으신가요? <a th:href="@{/login}" class="fw-semibold"> 로그인
-						</a>
-					</div>
-
-					<hr>
-
-					<div th:if="${error}" class="alert alert-danger">
-						[[${error}]]</div>
-				</div>
-			</div>
-
-		</div>
-	</div>
-	<!-- js -->
-	<script th:src="@{/js/register.js}"></script>
+    <script th:src="@{/js/register.js}"></script>
 </th:block>
 </html>

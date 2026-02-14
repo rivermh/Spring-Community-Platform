@@ -4,45 +4,73 @@
       th:replace="~{layout/layout :: layout(content=~{::content})}">
 
 <th:block th:fragment="content">
+    <div class="row justify-content-center">
+        <div class="col-lg-9 col-xl-8">
 
-    <h2 class="mb-4">게시글 수정</h2>
+            <div class="mb-4">
+                <h2 class="fw-bold text-dark mb-1" style="letter-spacing: -1px;">게시글 수정</h2>
+                <p class="text-muted small">기존의 내용을 다듬어 더 멋진 글을 완성해보세요.</p>
+            </div>
 
-    <form th:action="@{|/posts/${post.id}/edit|}" method="post">
+            <div class="card shadow-sm border-0 rounded-4">
+                <div class="card-body p-4 p-md-5">
+                    <form th:action="@{|/posts/${post.id}/edit|}" method="post">
 
-        <!-- 제목 -->
-        <div class="mb-3">
-            <label class="form-label">제목</label>
-            <input type="text"
-                   name="title"
-                   class="form-control"
-                   th:value="${post.title}"
-                   required>
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-dark small text-uppercase">Title</label>
+                            <input type="text"
+                                   name="title"
+                                   class="form-control border-0 bg-light py-3 px-4 rounded-3 fw-medium"
+                                   placeholder="제목을 입력하세요"
+                                   th:value="${post.title}"
+                                   required>
+                        </div>
+
+                        <div class="mb-4">
+                            <label class="form-label fw-bold text-dark small text-uppercase">Content</label>
+                            <textarea name="content"
+                                      class="form-control border-0 bg-light p-4 rounded-3"
+                                      rows="12"
+                                      style="resize: none; line-height: 1.6;"
+                                      placeholder="내용을 입력하세요"
+                                      required
+                                      th:text="${post.content}"></textarea>
+                        </div>
+
+                        <hr class="my-4 opacity-25">
+
+                        <div class="d-flex justify-content-between align-items-center">
+                            <a th:href="@{|/posts/${post.id}|}"
+                               class="btn btn-link text-muted text-decoration-none small">
+                                취소하고 돌아가기
+                            </a>
+
+                            <div class="d-flex gap-2">
+                                <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill fw-bold shadow-sm">
+                                    수정 완료
+                                </button>
+                            </div>
+                        </div>
+
+                    </form>
+                </div>
+            </div>
+            
+            <div class="mt-4 text-center">
+                <p class="text-muted small">
+                    💡 수정한 내용은 즉시 게시판에 반영됩니다.
+                </p>
+            </div>
+
         </div>
+    </div>
 
-        <!-- 내용 -->
-        <div class="mb-3">
-            <label class="form-label">내용</label>
-            <textarea name="content"
-                      class="form-control"
-                      rows="6"
-                      required
-                      th:text="${post.content}">
-            </textarea>
-        </div>
-
-        <!-- 버튼 -->
-        <div class="d-flex gap-2">
-            <button type="submit" class="btn btn-primary">
-                수정 완료
-            </button>
-
-            <a th:href="@{|/posts/${post.id}|}"
-               class="btn btn-outline-secondary">
-                취소
-            </a>
-        </div>
-
-    </form>
-
+    <style>
+        .form-control:focus {
+            background-color: #fff !important;
+            border: 1px solid #0d6efd !important;
+            box-shadow: 0 0 0 0.25 margin rgba(13, 110, 253, 0.1) !important;
+        }
+    </style>
 </th:block>
 </html>

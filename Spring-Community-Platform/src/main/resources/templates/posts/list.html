@@ -5,140 +5,111 @@
 
 <th:block th:fragment="content">
 
-	<!-- 상단 헤더 -->
-	<div class="d-flex justify-content-between align-items-center mb-4">
-		<h3 class="fw-bold mb-0">자유게시판</h3>
-
-		<a sec:authorize="isAuthenticated()" th:href="@{/posts/new}"
-			class="btn btn-primary"> 글쓰기 </a>
+	<div class="row align-items-center mb-5">
+		<div class="col">
+			<h2 class="fw-bold text-dark mb-1" style="letter-spacing: -1px;">자유게시판</h2>
+			<p class="text-muted mb-0 small">다양한 생각을 나누는 공간입니다.</p>
+		</div>
+		<div class="col-auto">
+			<a sec:authorize="isAuthenticated()" th:href="@{/posts/new}"
+				class="btn btn-primary px-4 py-2 rounded-pill fw-bold shadow-sm">
+				새 글 작성
+			</a>
+		</div>
 	</div>
 
-	<!-- 검색 -->
-	<form th:action="@{/posts}" method="get"
-		class="row g-2 mb-3 justify-content-end">
+	<div class="bg-white p-3 rounded-4 shadow-sm border mb-4">
+		<form th:action="@{/posts}" method="get" class="row g-3 align-items-center">
+			<div class="col-md-auto">
+				<select name="sortType" class="form-select border-0 bg-light rounded-3 fw-medium" onchange="this.form.submit()">
+					<option value="LATEST" th:selected="${sortType == null || sortType.name() == 'LATEST'}">최신순</option>
+					<option value="OLDEST" th:selected="${sortType?.name() == 'OLDEST'}">오래된순</option>
+					<option value="TITLE" th:selected="${sortType?.name() == 'TITLE'}">제목순</option>
+				</select>
+			</div>
 
-		<!-- 정렬 -->
-		<div class="col-auto">
-			<select name="sortType" class="form-select">
-				<option value="LATEST"
-					th:selected="${sortType == null || sortType.name() == 'LATEST'}">
-					최신순</option>
-				<option value="OLDEST" th:selected="${sortType?.name() == 'OLDEST'}">
-					오래된순</option>
-				<option value="TITLE" th:selected="${sortType?.name() == 'TITLE'}">
-					제목순</option>
-			</select>
-		</div>
+			<div class="col-md ms-md-auto">
+				<div class="input-group">
+					<select name="searchType" class="form-select border-0 bg-light rounded-start-3" style="max-width: 100px;">
+						<option value="TITLE" th:selected="${searchType == null || searchType.name() == 'TITLE'}">제목</option>
+						<option value="CONTENT" th:selected="${searchType?.name() == 'CONTENT'}">내용</option>
+						<option value="AUTHOR" th:selected="${searchType?.name() == 'AUTHOR'}">작성자</option>
+					</select>
+					<input type="text" name="keyword" class="form-control border-0 bg-light" 
+						placeholder="무엇을 찾으시나요?" th:value="${keyword}">
+					<button type="submit" class="btn btn-dark px-4 rounded-end-3 fw-bold">검색</button>
+				</div>
+			</div>
+		</form>
+	</div>
 
-		<!-- 검색 타입 -->
-		<div class="col-auto">
-			<select name="searchType" class="form-select">
-				<option value="TITLE"
-					th:selected="${searchType == null || searchType.name() == 'TITLE'}">
-					제목</option>
-				<option value="CONTENT"
-					th:selected="${searchType?.name() == 'CONTENT'}">내용</option>
-				<option value="AUTHOR"
-					th:selected="${searchType?.name() == 'AUTHOR'}">작성자</option>
-			</select>
-		</div>
-
-		<!-- 키워드 -->
-		<div class="col-auto">
-			<input type="text" name="keyword" class="form-control"
-				placeholder="검색어 입력" th:value="${keyword}">
-		</div>
-
-		<div class="col-auto">
-			<button type="submit" class="btn btn-outline-secondary">검색</button>
-		</div>
-
-
-	</form>
-
-	<!-- 게시글 목록 -->
-	<div class="card shadow-sm border-0">
-		<div class="card-body p-0">
-
-			<table class="table table-hover mb-0">
+	<div class="card shadow-sm border-0 rounded-4 overflow-hidden">
+		<div class="table-responsive">
+			<table class="table table-hover align-middle mb-0">
 				<thead class="table-light">
-					<tr>
-						<th style="width: 10%">번호</th>
-						<th>제목</th>
-						<th style="width: 15%">작성자</th>
-						<th style="width: 20%">작성일</th>
+					<tr class="text-muted" style="font-size: 0.85rem; font-weight: 600;">
+						<th class="text-center py-3" style="width: 80px;">NO</th>
+						<th class="py-3">SUBJECT</th>
+						<th class="py-3" style="width: 120px;">AUTHOR</th>
+						<th class="text-center py-3" style="width: 150px;">DATE</th>
 					</tr>
 				</thead>
 
-				<tbody>
-					<tr th:each="post : ${posts}">
-						<td th:text="${post.id}"></td>
-
-						<td><a th:href="@{/posts/{id}(id=${post.id})}"
-							th:text="${post.title}" class="fw-semibold text-decoration-none">
-						</a></td>
-
-						<td th:text="${post.user.username}"></td>
-
-						<td
-							th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}"></td>
+				<tbody class="border-top-0">
+					<tr th:each="post : ${posts}" style="cursor: pointer;" 
+						th:onclick="|location.href='@{/posts/{id}(id=${post.id})}'|">
+						<td class="text-center">
+							<span class="badge rounded-pill bg-light text-secondary fw-normal" th:text="${post.id}">1</span>
+						</td>
+						<td>
+							<a th:href="@{/posts/{id}(id=${post.id})}"
+								th:text="${post.title}" 
+								class="fw-bold text-dark text-decoration-none">
+							</a>
+						</td>
+						<td>
+							<span class="text-secondary small" th:text="${post.user.username}">user123</span>
+						</td>
+						<td class="text-center">
+							<span class="text-muted" style="font-size: 0.85rem;"
+								th:text="${#temporals.format(post.createdAt, 'MM-dd HH:mm')}">02-14 16:30</span>
+						</td>
 					</tr>
 
-					<!-- 게시글 없을 때 -->
 					<tr th:if="${#lists.isEmpty(posts)}">
-						<td colspan="4" class="text-center text-muted py-4">아직 게시글이
-							없습니다.</td>
+						<td colspan="4" class="text-center py-5">
+							<div class="py-4">
+								<p class="text-muted mb-0">등록된 게시글이 없습니다.</p>
+							</div>
+						</td>
 					</tr>
 				</tbody>
 			</table>
-
 		</div>
 	</div>
 
-	<!-- 페이징 -->
-	<nav class="mt-4" th:if="${postPage.totalPages > 0}">
-		<ul class="pagination justify-content-center">
-
-			<!-- 이전 -->
+	<nav class="mt-5" th:if="${postPage.totalPages > 0}">
+		<ul class="pagination justify-content-center gap-1">
 			<li class="page-item" th:classappend="${postPage.first} ? 'disabled'">
-				<a class="page-link"
-				th:href="@{/posts(
-                   page=${postPage.number - 1},
-                   keyword=${keyword},
-                   searchType=${searchType},
-                   sortType=${sortType}
-               )}">
-					이전 </a>
+				<a class="page-link rounded-circle border-0 text-dark" th:href="@{/posts(page=${postPage.number - 1}, keyword=${keyword}, searchType=${searchType}, sortType=${sortType})}">
+					&lsaquo;
+				</a>
 			</li>
 
-			<!-- 페이지 번호 -->
-			<li class="page-item"
-				th:each="i : ${#numbers.sequence(0, postPage.totalPages - 1)}"
-				th:classappend="${i == postPage.number} ? 'active'"><a
-				class="page-link"
-				th:href="@{/posts(
-                   page=${i},
-                   keyword=${keyword},
-                   searchType=${searchType},
-                   sortType=${sortType}
-               )}"
-				th:text="${i + 1}"> </a></li>
+			<li class="page-item" th:each="i : ${#numbers.sequence(0, postPage.totalPages - 1)}"
+				th:classappend="${i == postPage.number} ? 'active'">
+				<a class="page-link rounded-circle border-0 fw-bold mx-1" 
+				   th:style="${i == postPage.number} ? 'background-color: #0d6efd; color: white;' : 'color: #333;'"
+				   th:href="@{/posts(page=${i}, keyword=${keyword}, searchType=${searchType}, sortType=${sortType})}" th:text="${i + 1}">1</a>
+			</li>
 
-			<!-- 다음 -->
 			<li class="page-item" th:classappend="${postPage.last} ? 'disabled'">
-				<a class="page-link"
-				th:href="@{/posts(
-                   page=${postPage.number + 1},
-                   keyword=${keyword},
-                   searchType=${searchType},
-                   sortType=${sortType}
-               )}">
-					다음 </a>
+				<a class="page-link rounded-circle border-0 text-dark" th:href="@{/posts(page=${postPage.number + 1}, keyword=${keyword}, searchType=${searchType}, sortType=${sortType})}">
+					&rsaquo;
+				</a>
 			</li>
-
 		</ul>
 	</nav>
-
 
 </th:block>
 </html>
