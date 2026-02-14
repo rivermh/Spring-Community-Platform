@@ -14,7 +14,8 @@
 
             <div class="card shadow-sm border-0 rounded-4">
                 <div class="card-body p-4 p-md-5">
-                    <form th:action="@{|/posts/${post.id}/edit|}" method="post">
+                    <form th:action="@{|/posts/${post.id}/edit|}" method="post"
+                          onsubmit="if(this.title.value.trim() == '' || this.content.value.trim() == '') { alert('공백 제외, 제목과 내용을 모두 입력해주세요!'); return false; }">
 
                         <div class="mb-4">
                             <label class="form-label fw-bold text-dark small text-uppercase">Title</label>
@@ -23,7 +24,10 @@
                                    class="form-control border-0 bg-light py-3 px-4 rounded-3 fw-medium"
                                    placeholder="제목을 입력하세요"
                                    th:value="${post.title}"
-                                   required>
+                                   required
+                                   pattern=".*\S.*"
+                                   oninvalid="this.setCustomValidity('수정할 제목을 입력해주세요! (공백 제외)')"
+                                   oninput="this.setCustomValidity('')">
                         </div>
 
                         <div class="mb-4">
@@ -34,6 +38,8 @@
                                       style="resize: none; line-height: 1.6;"
                                       placeholder="내용을 입력하세요"
                                       required
+                                      oninvalid="this.setCustomValidity('수정할 내용을 입력해주세요!')"
+                                      oninput="this.setCustomValidity('')"
                                       th:text="${post.content}"></textarea>
                         </div>
 
@@ -66,10 +72,26 @@
     </div>
 
     <style>
+        .form-control {
+            transition: all 0.2s ease-in-out;
+            border: 2px solid transparent !important;
+        }
+
         .form-control:focus {
             background-color: #fff !important;
-            border: 1px solid #0d6efd !important;
-            box-shadow: 0 0 0 0.25 margin rgba(13, 110, 253, 0.1) !important;
+            border: 2px solid #0d6efd !important;
+            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.08) !important;
+        }
+
+        /* 공백이거나 비어있어서 유효하지 않을 때 포커스되면 빨간색 */
+        .form-control:invalid:focus {
+            border: 2px solid #dc3545 !important;
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.08) !important;
+        }
+
+        /* 유효한 입력일 때 초록색 (사용자 피드백용) */
+        .form-control:valid:not(:placeholder-shown) {
+            border: 2px solid #198754 !important;
         }
     </style>
 </th:block>

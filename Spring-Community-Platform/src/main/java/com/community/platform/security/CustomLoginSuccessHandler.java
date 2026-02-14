@@ -30,7 +30,7 @@ public class CustomLoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             new SecurityContextLogoutHandler().logout(request, response, authentication);
             
             // 로그인 페이지로 에러 메시지와 함께 리다이렉트
-            // URL에 "탈퇴"라는 글자가 포함되어야 login.html의 th:if 조건이 작동합니다.
+            // URL에 "탈퇴"라는 글자가 포함되어야 login.html의 th:if 조건이 작동
             String errorMessage = URLEncoder.encode("탈퇴한 계정입니다. 복구가 필요합니다.", StandardCharsets.UTF_8);
             String username = userDetails.getUsername();
             

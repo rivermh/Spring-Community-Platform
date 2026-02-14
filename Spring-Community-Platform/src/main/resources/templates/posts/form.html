@@ -14,25 +14,29 @@
 
             <div class="card shadow-sm border-0 rounded-4">
                 <div class="card-body p-4 p-md-5">
-                    <form th:action="@{/posts}" method="post">
+                    <form th:action="@{/posts}" method="post"
+                          onsubmit="if(this.title.value.trim() == '' || this.content.value.trim() == '') { alert('공백 제외, 제목과 내용을 모두 입력해주세요!'); return false; }">
 
                         <div class="mb-4">
                             <label class="form-label fw-bold text-dark small text-uppercase">Title</label>
-                            <input type="text"
-                                   name="title"
+                            <input type="text" name="title" id="postTitle"
                                    class="form-control border-0 bg-light py-3 px-4 rounded-3 fw-medium"
-                                   placeholder="시선을 사로잡는 제목을 입력해보세요"
-                                   required>
+                                   placeholder="시선을 사로잡는 제목을 입력해보세요" 
+                                   required
+                                   pattern=".*\S.*"
+                                   oninvalid="this.setCustomValidity('공백을 제외한 제목을 입력해주세요!')"
+                                   oninput="this.setCustomValidity('')">
                         </div>
 
                         <div class="mb-4">
                             <label class="form-label fw-bold text-dark small text-uppercase">Content</label>
-                            <textarea name="content"
-                                      class="form-control border-0 bg-light p-4 rounded-3"
-                                      rows="12"
+                            <textarea name="content" id="postContent"
+                                      class="form-control border-0 bg-light p-4 rounded-3" rows="12"
                                       style="resize: none; line-height: 1.6;"
-                                      placeholder="여기에 내용을 자유롭게 작성하세요..."
-                                      required></textarea>
+                                      placeholder="여기에 내용을 자유롭게 작성하세요..." 
+                                      required
+                                      oninvalid="this.setCustomValidity('내용을 입력해주세요!')"
+                                      oninput="this.setCustomValidity('')"></textarea>
                         </div>
 
                         <hr class="my-4 opacity-25">
@@ -40,13 +44,12 @@
                         <div class="d-flex justify-content-between align-items-center">
                             <a th:href="@{/posts}"
                                class="btn btn-link text-muted text-decoration-none small">
-                                작성 취소
-                            </a>
+                                작성 취소 </a>
 
                             <div class="d-flex gap-2">
-                                <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill fw-bold shadow-sm">
-                                    등록하기
-                                </button>
+                                <button type="submit"
+                                        class="btn btn-primary px-5 py-2 rounded-pill fw-bold shadow-sm">
+                                    등록하기</button>
                             </div>
                         </div>
 
@@ -55,9 +58,7 @@
             </div>
 
             <div class="mt-4 p-3 bg-light rounded-3">
-                <p class="text-muted small mb-0 text-center">
-                    📢 고운 말을 사용하면 더 따뜻한 커뮤니티가 됩니다.
-                </p>
+                <p class="text-muted small mb-0 text-center">📢 고운 말을 사용하면 더 따뜻한 커뮤니티가 됩니다.</p>
             </div>
 
         </div>
@@ -66,11 +67,24 @@
     <style>
         .form-control {
             transition: all 0.2s ease-in-out;
+            border: 2px solid transparent !important;
         }
+
         .form-control:focus {
             background-color: #fff !important;
-            border: 1px solid #0d6efd !important;
+            border: 2px solid #0d6efd !important;
             box-shadow: 0 4px 12px rgba(13, 110, 253, 0.08) !important;
+        }
+
+        /* 1. 필수값이 비어있거나 pattern에 맞지 않을 때(공백만 있을 때) 포커스 시 빨간색 */
+        .form-control:invalid:focus {
+            border: 2px solid #dc3545 !important;
+            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.08) !important;
+        }
+
+        /* 2. 입력이 완료되었고 유효할 때 초록색 포인트 */
+        .form-control:valid:not(:placeholder-shown) {
+            border: 2px solid #198754 !important;
         }
     </style>
 </th:block>

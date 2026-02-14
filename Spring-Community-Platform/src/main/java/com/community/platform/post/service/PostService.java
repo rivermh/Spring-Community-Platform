@@ -36,6 +36,9 @@ public class PostService {
  
 	// 글 작성
 	public Long write(String username, String title, String content) {
+		if (title == null || title.isBlank() || content == null || content.isBlank()) {
+	        throw new IllegalArgumentException("제목과 내용을 모두 입력해주세요.");
+	    }
 		User user = userRepository.findByUsername(username)
 				.orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다."));
 		Post post = Post.create(user, title, content);
@@ -79,6 +82,10 @@ public class PostService {
 	public void update(Long PostId, String username, String title, String content) {
 		Post post = findById(PostId);
 
+		if (title == null || title.isBlank() || content == null || content.isBlank()) {
+	        throw new IllegalArgumentException("제목과 내용을 모두 입력해주세요.");
+	    }
+		
 		if (!post.getUser().getUsername().equals(username)) {
 			throw new SecurityException("수정 권한이 없습니다.");
 		}

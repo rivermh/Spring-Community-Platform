@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.community.platform.common.PostSearchType;
 import com.community.platform.common.PostSortType;
@@ -59,12 +60,18 @@ public class PostController {
 
 	// 글 작성 처리
 	@PostMapping
-	public String write(@AuthenticationPrincipal CustomUserDetails userDetails, @RequestParam String title,
-			@RequestParam String content) {
-		postService.write(userDetails.getUsername(), title, content);
+	public String write(@AuthenticationPrincipal CustomUserDetails userDetails, 
+	                   @RequestParam String title,
+	                   @RequestParam String content,
+	                   RedirectAttributes rttr) { 
 
-		return "redirect:/posts";
+	    if (title == null || title.trim().isEmpty() || content == null || content.trim().isEmpty()) {
+	        rttr.addFlashAttribute("error", "제목과 내용을 모두 입력해주세요.");
+	        return "redirect:/posts/new"; // 다시 작성 폼으로 보냄
+	    }
 
+	    postService.write(userDetails.getUsername(), title, content);
+	    return "redirect:/posts";
 	}
 
 	// 게시글 상세

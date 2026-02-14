@@ -4,33 +4,44 @@
       th:replace="~{layout/layout :: layout(content=~{::content})}">
 
 <th:block th:fragment="content">
-
     <div class="row justify-content-center">
-        <div class="col-md-8 col-lg-6">
+        <div class="col-md-8 col-lg-6 col-xl-5">
 
-            <div class="card shadow-sm border-0">
+            <div class="card shadow-sm border-0 rounded-4 mt-5">
                 <div class="card-body p-5 text-center">
 
-                    <div class="mb-3 text-primary">
-                        <i class="bi bi-envelope-check" style="font-size: 3rem;"></i>
+                    <div class="mb-4">
+                        <div class="result-icon-box" 
+                             th:classappend="${success == false} ? 'bg-danger-subtle' : 'bg-success-subtle'">
+                            <i class="bi" 
+                               th:classappend="${success == false} ? 'bi-exclamation-triangle-fill text-danger' : 'bi-patch-check-fill text-success'"
+                               style="font-size: 3.5rem;"></i>
+                        </div>
                     </div>
 
-                    <h2 class="mb-3 fw-bold">Email Verification</h2>
+                    <h2 class="fw-bold text-dark mb-3" 
+                        th:text="${success == false} ? '인증 실패' : '인증 완료'">인증 결과</h2>
 
-                    <hr class="my-4">
-
-                    <p class="fs-5 mb-4 text-dark" th:text="${message}">
+                    <p class="text-muted mb-5 px-3" th:text="${message}">
                         인증 결과 메시지가 여기에 표시됩니다.
                     </p>
 
-                    <div class="d-flex justify-content-center gap-2 mt-4">
-                        <a th:href="@{/login}" class="btn btn-primary px-4">
+                    <hr class="my-4 opacity-25">
+
+                    <div class="d-grid gap-2 d-sm-flex justify-content-center mt-4">
+                        <a th:href="@{/login}" class="btn btn-primary px-5 py-2 rounded-pill fw-bold shadow-sm">
                             로그인 하러 가기
                         </a>
                         
-                        <a th:href="@{/}" class="btn btn-outline-secondary px-4">
+                        <a th:href="@{/}" class="btn btn-light px-5 py-2 rounded-pill fw-bold border">
                             홈으로
                         </a>
+                    </div>
+
+                    <div th:if="${success == false}" class="mt-4">
+                        <p class="small text-muted">
+                            문제가 지속된다면 <a href="mailto:support@community.com" class="text-decoration-none">고객센터</a>로 문의해주세요.
+                        </p>
                     </div>
 
                 </div>
@@ -39,5 +50,20 @@
         </div>
     </div>
 
+    <style>
+        .result-icon-box {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        /* 성공 시 테마 */
+        .bg-success-subtle { background-color: #e6f6ec !important; }
+        /* 실패 시 테마 */
+        .bg-danger-subtle { background-color: #fdf2f2 !important; }
+    </style>
 </th:block>
 </html>

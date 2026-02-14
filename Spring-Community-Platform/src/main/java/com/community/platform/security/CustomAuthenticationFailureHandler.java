@@ -40,7 +40,7 @@ public class CustomAuthenticationFailureHandler
 	    }
 	    // 4️ 비밀번호 오류
 	    else if (exception instanceof BadCredentialsException) {
-	        errorMessage = "비밀번호가 틀렸습니다.";
+	        errorMessage = "비밀번호가 틀렸습니다. 다시 입력해주세요.";
 	    }
 
 	    response.sendRedirect(

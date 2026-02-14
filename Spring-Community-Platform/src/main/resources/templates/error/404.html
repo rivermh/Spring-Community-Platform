@@ -1,15 +1,71 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>페이지 없음</title>
-</head>
-<body>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout :: layout(content=~{::content})}">
 
-<h2>페이지를 찾을 수 없습니다 😢</h2>
-<p th:text="${message}">존재하지 않는 요청입니다.</p>
+<th:block th:fragment="content">
+    <div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+        <div class="col-md-8 col-lg-6 col-xl-5 text-center">
 
-<a href="/">홈으로</a>
+            <div class="mb-5 position-relative">
+                <h1 class="display-1 fw-black text-secondary opacity-10" style="font-size: 10rem; letter-spacing: -5px;">404</h1>
+                <div class="position-absolute top-50 start-50 translate-middle w-100">
+                    <div class="icon-box-notfound shadow-sm mx-auto">
+                        <i class="bi bi-compass text-warning" style="font-size: 3.5rem;"></i>
+                    </div>
+                </div>
+            </div>
 
-</body>
+            <div class="mb-5">
+                <h2 class="fw-bold text-dark mb-3">페이지를 찾을 수 없습니다</h2>
+                <p class="text-muted lh-lg">
+                    찾으시는 페이지의 주소가 잘못 입력되었거나,<br>
+                    변경 혹은 삭제되어 현재 사용이 불가능합니다.
+                </p>
+                <div th:if="${message}" class="badge bg-light text-secondary fw-normal px-3 py-2 rounded-pill mt-2">
+                    <i class="bi bi-info-circle me-1"></i> <span th:text="${message}">존재하지 않는 요청입니다.</span>
+                </div>
+            </div>
+
+            <div class="d-grid gap-2 d-sm-flex justify-content-center">
+                <a th:href="@{/}" class="btn btn-primary px-5 py-3 rounded-pill fw-bold shadow-sm">
+                    <i class="bi bi-house-door me-2"></i> 메인으로 돌아가기
+                </a>
+                
+                <button onclick="history.back()" class="btn btn-outline-secondary px-5 py-3 rounded-pill fw-bold border">
+                    <i class="bi bi-arrow-left me-2"></i> 이전 페이지로
+                </button>
+            </div>
+
+            <div class="mt-5 pt-4">
+                <p class="text-muted small">
+                    원하시는 정보를 찾지 못하셨나요? <br class="d-sm-none">
+                    <a th:href="@{/posts}" class="text-primary text-decoration-none fw-semibold ms-1">게시판 목록</a>에서 검색해보세요!
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <style>
+        .fw-black { font-weight: 900; }
+        .icon-box-notfound {
+            width: 120px;
+            height: 120px;
+            background-color: white;
+            border-radius: 40px; /* 부드러운 곡선 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05) !important;
+            /* 둥둥 떠있는 느낌의 애니메이션 */
+            animation: floating 3s ease-in-out infinite;
+        }
+
+        @keyframes floating {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-15px); }
+            100% { transform: translateY(0px); }
+        }
+    </style>
+</th:block>
 </html>

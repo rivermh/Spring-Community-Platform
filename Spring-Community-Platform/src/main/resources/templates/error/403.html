@@ -1,15 +1,63 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="UTF-8">
-    <title>접근 권한 없음</title>
-</head>
-<body>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout :: layout(content=~{::content})}">
 
-<h2>접근 권한이 없습니다 🚫</h2>
-<p th:text="${message}">권한이 없습니다.</p>
+<th:block th:fragment="content">
+    <div class="row justify-content-center align-items-center" style="min-height: 70vh;">
+        <div class="col-md-8 col-lg-6 col-xl-5 text-center">
 
-<a href="/">홈으로</a>
+            <div class="mb-5 position-relative">
+                <h1 class="display-1 fw-black text-primary-emphasis opacity-25" style="font-size: 8rem; letter-spacing: -5px;">403</h1>
+                <div class="position-absolute top-50 start-50 translate-middle w-100">
+                    <div class="icon-box-forbidden shadow-sm mx-auto">
+                        <i class="bi bi-shield-lock text-primary" style="font-size: 3.5rem;"></i>
+                    </div>
+                </div>
+            </div>
 
-</body>
+            <div class="mb-5">
+                <h2 class="fw-bold text-dark mb-3">접근 권한이 없습니다</h2>
+                <p class="text-muted lh-lg">
+                    죄송합니다! 요청하신 페이지는 접근 권한이 제한되어 있습니다.<br>
+                    <span class="fw-semibold text-danger" th:text="${message}">권한이 없습니다.</span>
+                </p>
+            </div>
+
+            <div class="d-grid gap-2 d-sm-flex justify-content-center">
+                <a th:href="@{/}" class="btn btn-primary px-5 py-3 rounded-pill fw-bold shadow-sm">
+                    <i class="bi bi-house-door me-2"></i> 홈으로 가기
+                </a>
+                
+                <a sec:authorize="isAnonymous()" th:href="@{/login}" class="btn btn-outline-dark px-5 py-3 rounded-pill fw-bold">
+                    로그인 하기
+                </a>
+                
+                <button onclick="history.back()" class="btn btn-light px-5 py-3 rounded-pill fw-bold border">
+                    이전 페이지로
+                </button>
+            </div>
+
+            <div class="mt-5 pt-4">
+                <p class="text-muted small">
+                    혹시 시스템 오류라고 생각되신다면 관리자에게 문의해주세요.
+                </p>
+            </div>
+
+        </div>
+    </div>
+
+    <style>
+        .fw-black { font-weight: 900; }
+        .icon-box-forbidden {
+            width: 120px;
+            height: 120px;
+            background-color: white;
+            border-radius: 30px; /* 약간 각진 둥근 네모 */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(-10deg); /* 살짝 기울여서 위트 있게 */
+        }
+    </style>
+</th:block>
 </html>
