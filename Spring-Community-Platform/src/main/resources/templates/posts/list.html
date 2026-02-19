@@ -76,7 +76,7 @@
 						</td>
 					</tr>
 
-					<tr th:if="${#lists.isEmpty(posts)}">
+					<tr th:if="${postPage.empty}">
 						<td colspan="4" class="text-center py-5">
 							<div class="py-4">
 								<p class="text-muted mb-0" th:text="#{post.list.table.empty}">등록된 게시글이 없습니다.</p>
@@ -88,26 +88,47 @@
 		</div>
 	</div>
 
-	<nav class="mt-5" th:if="${postPage.totalPages > 1}">
+	<nav class="mt-5" th:if="${postPage.totalPages > 0}" 
+		 th:with="
+		    start=${T(java.lang.Math).max(0, postPage.number - 2)}, 
+		    end=${T(java.lang.Math).min(postPage.totalPages - 1, postPage.number + 2)}">
+		
 		<ul class="pagination justify-content-center gap-1">
+			
 			<li class="page-item" th:classappend="${postPage.first} ? 'disabled'">
-				<a class="page-link rounded-circle border-0 text-dark" th:href="@{/posts(page=${postPage.number - 1}, keyword=${keyword}, searchType=${searchType}, sortType=${sortType})}">
+				<a class="page-link rounded-circle border-0 text-dark" 
+				   th:href="@{/posts(page=0, keyword=${keyword}, searchType=${searchType}, sortType=${sortType})}">
+					&laquo;
+				</a>
+			</li>
+
+			<li class="page-item" th:classappend="${postPage.first} ? 'disabled'">
+				<a class="page-link rounded-circle border-0 text-dark" 
+				   th:href="@{/posts(page=${postPage.number - 1}, keyword=${keyword}, searchType=${searchType}, sortType=${sortType})}">
 					&lsaquo;
 				</a>
 			</li>
 
-			<th:block th:if="${postPage.totalPages > 0}">
-				<li class="page-item" th:each="i : ${#numbers.sequence(0, postPage.totalPages - 1)}"
-					th:classappend="${i == postPage.number} ? 'active'">
+			<th:block th:each="i : ${#numbers.sequence(start, end)}">
+				<li class="page-item" th:classappend="${i == postPage.number} ? 'active'">
 					<a class="page-link rounded-circle border-0 fw-bold mx-1" 
 					   th:style="${i == postPage.number} ? 'background-color: #0d6efd; color: white;' : 'color: #333;'"
-					   th:href="@{/posts(page=${i}, keyword=${keyword}, searchType=${searchType}, sortType=${sortType})}" th:text="${i + 1}">1</a>
+					   th:href="@{/posts(page=${i}, keyword=${keyword}, searchType=${searchType}, sortType=${sortType})}" 
+					   th:text="${i + 1}">1</a>
 				</li>
 			</th:block>
 
 			<li class="page-item" th:classappend="${postPage.last} ? 'disabled'">
-				<a class="page-link rounded-circle border-0 text-dark" th:href="@{/posts(page=${postPage.number + 1}, keyword=${keyword}, searchType=${searchType}, sortType=${sortType})}">
+				<a class="page-link rounded-circle border-0 text-dark" 
+				   th:href="@{/posts(page=${postPage.number + 1}, keyword=${keyword}, searchType=${searchType}, sortType=${sortType})}">
 					&rsaquo;
+				</a>
+			</li>
+
+			<li class="page-item" th:classappend="${postPage.last} ? 'disabled'">
+				<a class="page-link rounded-circle border-0 text-dark" 
+				   th:href="@{/posts(page=${postPage.totalPages - 1}, keyword=${keyword}, searchType=${searchType}, sortType=${sortType})}">
+					&raquo;
 				</a>
 			</li>
 		</ul>

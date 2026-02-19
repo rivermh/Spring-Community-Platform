@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      th:replace="~{layout/layout :: layout(content=~{::content})}">
+
+<th:block th:fragment="content">
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="fw-bold"><i class="bi bi-file-earmark-post-fill"></i> 게시글 관리</h2>
+            
+            <form th:action="@{/admin/posts}" method="get" class="d-flex gap-2">
+                <input type="text" name="keyword" th:value="${keyword}" class="form-control form-control-sm" placeholder="제목 또는 내용 검색">
+                <button type="submit" class="btn btn-primary btn-sm px-3">검색</button>
+            </form>
+        </div>
+
+        <div class="card shadow-sm border-0">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th style="width: 80px;">ID</th>
+                            <th>제목</th>
+                            <th style="width: 150px;">작성자</th>
+                            <th style="width: 100px;">댓글/좋아요</th>
+                            <th style="width: 150px;">작성일</th>
+                            <th style="width: 120px;">관리</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="post : ${posts}">
+                            <td th:text="${post.id}">1</td>
+                            <td>
+                                <a th:href="@{/posts/{id}(id=${post.id})}" class="text-decoration-none text-dark fw-semibold" target="_blank">
+                                    <span th:text="${post.title}">게시글 제목입니다.</span>
+                                    <i class="bi bi-box-arrow-up-right small ms-1 text-muted"></i>
+                                </a>
+                            </td>
+                            <td th:text="${post.author}">작성자명</td>
+                            <td>
+                                <span class="badge bg-light text-dark border">
+                                    <i class="bi bi-chat-dots me-1"></i>[[${post.commentCount}]]
+                                </span>
+                                <span class="badge bg-light text-dark border">
+                                    <i class="bi bi-heart me-1"></i>[[${post.likeCount}]]
+                                </span>
+                            </td>
+                            <td th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd HH:mm')}">2026-02-19</td>
+                            <td>
+                                <button class="btn btn-outline-danger btn-sm w-100" 
+                                        th:onclick="'deletePost(' + ${post.id} + ')'">
+                                    <i class="bi bi-trash3 me-1"></i>삭제
+                                </button>
+                            </td>
+                        </tr>
+                        <tr th:if="${posts.isEmpty()}">
+                            <td colspan="6" class="text-center py-5 text-muted">검색된 게시글이 없습니다.</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <nav class="mt-4" th:if="${posts.totalPages > 1}">
+            <ul class="pagination pagination-sm justify-content-center">
+                <li class="page-item" th:classappend="${posts.first} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/posts(page=${posts.number - 1}, keyword=${keyword})}">이전</a>
+                </li>
+                <li class="page-item disabled">
+                    <span class="page-link" th:text="${posts.number + 1} + ' / ' + ${posts.totalPages}">1 / 5</span>
+                </li>
+                <li class="page-item" th:classappend="${posts.last} ? 'disabled'">
+                    <a class="page-link" th:href="@{/admin/posts(page=${posts.number + 1}, keyword=${keyword})}">다음</a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+
+    <script th:inline="javascript">
+        function deletePost(postId) {
+            if(!confirm('정말 이 게시글을 삭제하시겠습니까?\n삭제된 데이터는 복구할 수 없습니다.')) return;
+
+            fetch(`/admin/posts/${postId}`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json'
+                    // CSRF 토큰 필요 시 추가 (Thymeleaf 기본 설정 시 자동 처리되는 경우 많음)
+                }
+            }).then(response => {
+                if(response.ok) {
+                    alert('성공적으로 삭제되었습니다.');
+                    location.reload();
+                } else {
+                    alert('삭제에 실패했습니다. (권한 부족 또는 이미 삭제된 글)');
+                }
+            });
+        }
+    </script>
+</th:block>
+</html>

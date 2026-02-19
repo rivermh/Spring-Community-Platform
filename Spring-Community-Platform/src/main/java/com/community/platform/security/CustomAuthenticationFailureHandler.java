@@ -9,44 +9,44 @@ import org.springframework.security.web.authentication.AuthenticationFailureHand
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 
 @Component
-public class CustomAuthenticationFailureHandler
-        implements AuthenticationFailureHandler {
+public class CustomAuthenticationFailureHandler implements AuthenticationFailureHandler {
 
-	@Override
-	public void onAuthenticationFailure(
-	        HttpServletRequest request,
-	        HttpServletResponse response,
-	        AuthenticationException exception)
-	        throws IOException {
+    @Override
+    public void onAuthenticationFailure(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            AuthenticationException exception) throws IOException {
 
-	    String errorMessage = "로그인에 실패했습니다.";
+        String errorMessage;
 
-	    // 1️ Service 단에서 던진 예외 (가장 중요)
-	    if (exception instanceof InternalAuthenticationServiceException) {
-	        Throwable cause = exception.getCause();
-	        errorMessage = (cause != null)
-	                ? cause.getMessage()
-	                : exception.getMessage();
-	    }
-	    // 2️ 계정 비활성 / 탈퇴
-	    else if (exception instanceof DisabledException) {
-	        errorMessage = exception.getMessage();
-	    }
-	    // 3️ 계정 잠금
-	    else if (exception instanceof LockedException) {
-	        errorMessage = "계정이 잠겨 있습니다.";
-	    }
-	    // 4️ 비밀번호 오류
-	    else if (exception instanceof BadCredentialsException) {
-	        errorMessage = "비밀번호가 틀렸습니다. 다시 입력해주세요.";
-	    }
+        // 1. 계정 비활성화 (enabled = false)
+        if (exception instanceof DisabledException) {
+            // 이메일 미인증 또는 관리자가 비활성화한 경우
+            errorMessage = "이메일 인증이 완료되지 않았거나, 비활성화된 계정입니다.";
+        } 
+        // 2. 계정 잠금 (isAccountNonLocked = false) -> BANNED 상태
+        else if (exception instanceof LockedException) {
+            errorMessage = "운영 정책 위반으로 인해 정지된 계정입니다. 고객센터에 문의하세요.";
+        } 
+        // 3. 비밀번호 틀림
+        else if (exception instanceof BadCredentialsException) {
+            errorMessage = "아이디 또는 비밀번호가 일치하지 않습니다.";
+        } 
+        // 4. 존재하지 않는 사용자 (또는 시스템 내부 오류)
+        else if (exception instanceof InternalAuthenticationServiceException) {
+            errorMessage = "존재하지 않는 계정입니다. 다시 확인해주세요.";
+        } 
+        // 5. 그 외 예외
+        else {
+            errorMessage = "알 수 없는 이유로 로그인에 실패했습니다. 관리자에게 문의하세요.";
+        }
 
-	    response.sendRedirect(
-	            "/login?error=" +
-	            java.net.URLEncoder.encode(errorMessage, "UTF-8")
-	    );
-	} 
+        // UTF-8 인코딩 후 리다이렉트
+        String encodedMessage = URLEncoder.encode(errorMessage, StandardCharsets.UTF_8);
+        response.sendRedirect("/login?error=" + encodedMessage);
+    }
 }
-

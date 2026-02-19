@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+      th:replace="~{layout/layout :: layout(content=~{::content})}">
+
+<th:block th:fragment="content">
+    <div class="container-fluid mt-4">
+        <div class="row mb-4">
+            <div class="col-12 d-flex justify-content-between align-items-center">
+                <div>
+                    <h2 class="fw-bold"><i class="bi bi-speedometer2"></i> 관리자 대시보드</h2>
+                    <p class="text-muted">시스템 현황 및 주요 수치를 한눈에 확인하세요.</p>
+                </div>
+                <button class="btn btn-outline-secondary btn-sm" onclick="location.reload()">
+                    <i class="bi bi-arrow-clockwise"></i> 새로고침
+                </button>
+            </div>
+        </div>
+
+        <div class="row g-3 mb-4">
+            <div class="col-md-3">
+                <div class="card shadow-sm border-0 bg-primary text-white h-100">
+                    <div class="card-body p-4">
+                        <h5 class="card-title opacity-75 small text-uppercase">전체 사용자</h5>
+                        <h2 class="fw-bold mb-1" th:text="${totalUsers} + '명'">0명</h2>
+                        <p class="mb-0 small opacity-75">누적 등록 계정</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card shadow-sm border-0 bg-info text-white h-100">
+                    <div class="card-body p-4">
+                        <h5 class="card-title opacity-75 small text-uppercase">오늘 신규 가입</h5>
+                        <h2 class="fw-bold mb-1" th:text="${todaySignups} + '명'">0명</h2>
+                        <p class="mb-0 small opacity-75">오늘 가입한 유저</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card shadow-sm border-0 bg-danger text-white h-100">
+                    <div class="card-body p-4">
+                        <h5 class="card-title opacity-75 small text-uppercase">정지 유저</h5>
+                        <h2 class="fw-bold mb-1" th:text="${bannedUsers} + '명'">0명</h2>
+                        <p class="mb-0 small opacity-75">접근 제한 계정</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="card shadow-sm border-0 bg-success text-white h-100">
+                    <div class="card-body p-4">
+                        <h5 class="card-title opacity-75 small text-uppercase">오늘 게시글</h5>
+                        <h2 class="fw-bold mb-1" th:text="${todayPosts} + '개'">0개</h2>
+                        <p class="mb-0 small opacity-75">신규 콘텐츠</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-4">
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 h-100 border-start border-primary border-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3 text-primary"><i class="bi bi-people-fill me-2"></i>유저 관리</h5>
+                        <p class="text-muted small">사용자 상태변경(정지/복구) 및 권한을 수정할 수 있습니다. 특정 유저를 검색하여 상세 관리가 가능합니다.</p>
+                        <a th:href="@{/admin/users}" class="btn btn-primary btn-sm mt-2 px-3 shadow-sm">
+                            <i class="bi bi-list-ul me-1"></i> 유저 목록 바로가기
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card shadow-sm border-0 h-100 border-start border-success border-4">
+                    <div class="card-body p-4">
+                        <h5 class="fw-bold mb-3 text-success"><i class="bi bi-file-earmark-post me-2"></i>콘텐츠 관리</h5>
+                        <p class="text-muted small">부적절한 게시글 및 댓글을 삭제하거나 관리합니다. 커뮤니티 가이드를 위반한 게시물을 모니터링하세요.</p>
+                        <a th:href="@{/admin/posts}" class="btn btn-success btn-sm mt-2 px-3 shadow-sm">
+                            <i class="bi bi-card-text me-1"></i> 게시글 목록 바로가기
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-light border-0 shadow-sm d-flex align-items-center mb-0" role="alert">
+                    <i class="bi bi-info-circle-fill text-primary me-3 fs-4"></i>
+                    <div>
+                        <small class="text-muted">
+                            <strong>안내:</strong> 모든 수치는 실시간으로 DB에서 집계됩니다. 게시글 삭제 및 유저 정지 처리는 즉시 시스템에 반영되며 복구가 어려울 수 있으니 주의해 주세요.
+                        </small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</th:block>
+</html>

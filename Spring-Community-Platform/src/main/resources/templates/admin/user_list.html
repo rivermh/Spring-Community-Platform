@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	th:replace="~{layout/layout :: layout(content=~{::content})}">
+
+<th:block th:fragment="content">
+	<div class="container-fluid">
+		<div class="d-flex justify-content-between align-items-center mb-4">
+			<h2 class="fw-bold">
+				<i class="bi bi-people-fill"></i> 유저 관리
+			</h2>
+
+			<form th:action="@{/admin/users}" method="get" class="d-flex gap-2">
+				<input type="text" name="keyword" th:value="${keyword}"
+					class="form-control form-control-sm" placeholder="ID 또는 이메일 검색">
+				<button type="submit" class="btn btn-primary btn-sm">검색</button>
+			</form>
+		</div>
+
+		<div class="card shadow-sm border-0">
+			<div class="table-responsive">
+				<table class="table table-hover align-middle mb-0">
+					<thead class="table-light">
+						<tr>
+							<th>ID</th>
+							<th>사용자명</th>
+							<th>이메일</th>
+							<th>권한</th>
+							<th>상태</th>
+							<th>가입일</th>
+							<th>관리</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="user : ${users}">
+							<td th:text="${user.id}">1</td>
+							<td th:text="${user.username}" class="fw-bold">username</td>
+							<td th:text="${user.email}">email@test.com</td>
+							<td><span
+								th:classappend="${user.role.name() == 'ADMIN'} ? 'bg-danger' : 'bg-secondary'"
+								class="badge" th:text="${user.role}">USER</span></td>
+							<td><span
+								th:classappend="${user.status.name() == 'ACTIVE'} ? 'text-success' : 'text-danger'"
+								class="fw-bold" th:text="${user.status}">ACTIVE</span></td>
+							<td th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd')}">2024-01-01</td>
+							<td>
+								<button th:if="${user.status.name() == 'ACTIVE'}"
+									class="btn btn-outline-danger btn-sm"
+									th:onclick="'updateStatus(' + ${user.id} + ', \'BANNED\')'">정지</button>
+								<button th:if="${user.status.name() != 'ACTIVE'}"
+									class="btn btn-outline-success btn-sm"
+									th:onclick="'updateStatus(' + ${user.id} + ', \'ACTIVE\')'">복구</button>
+							</td>
+						</tr>
+					</tbody>
+				</table>
+			</div>
+		</div>
+
+		<nav class="mt-4" th:if="${users.totalPages > 1}"
+			th:with="start=${T(java.lang.Math).max(0, users.number - 2)}, 
+              end=${T(java.lang.Math).min(users.totalPages - 1, users.number + 2)}">
+
+			<ul class="pagination pagination-sm justify-content-center gap-1">
+
+				<li class="page-item" th:classappend="${users.first} ? 'disabled'">
+					<a class="page-link rounded-3 border-0"
+					th:href="@{/admin/users(page=0, keyword=${keyword})}"> <i
+						class="bi bi-chevron-double-left"></i>
+				</a>
+				</li>
+
+				<li class="page-item" th:classappend="${users.first} ? 'disabled'">
+					<a class="page-link rounded-3 border-0"
+					th:href="@{/admin/users(page=${users.number - 1}, keyword=${keyword})}">
+						<i class="bi bi-chevron-left"></i>
+				</a>
+				</li>
+
+				<th:block th:if="${users.totalPages > 0}">
+					<li class="page-item"
+						th:each="i : ${#numbers.sequence(start, end)}"
+						th:classappend="${i == users.number} ? 'active'"><a
+						class="page-link rounded-3 border-0 fw-bold mx-1"
+						th:style="${i == users.number} ? 'background-color: #0d6efd; color: white;' : 'color: #333;'"
+						th:href="@{/admin/users(page=${i}, keyword=${keyword})}"
+						th:text="${i + 1}">1</a></li>
+				</th:block>
+
+				<li class="page-item" th:classappend="${users.last} ? 'disabled'">
+					<a class="page-link rounded-3 border-0"
+					th:href="@{/admin/users(page=${users.number + 1}, keyword=${keyword})}">
+						<i class="bi bi-chevron-right"></i>
+				</a>
+				</li>
+
+				<li class="page-item" th:classappend="${users.last} ? 'disabled'">
+					<a class="page-link rounded-3 border-0"
+					th:href="@{/admin/users(page=${users.totalPages - 1}, keyword=${keyword})}">
+						<i class="bi bi-chevron-double-right"></i>
+				</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+
+	<script th:inline="javascript">
+        function updateStatus(userId, status) {
+            if(!confirm('해당 유저의 상태를 변경하시겠습니까?')) return;
+
+            fetch(`/admin/api/users/${userId}/status?status=${status}`, {
+                method: 'PATCH',
+                headers: {
+                    'Content-Type': 'application/json'
+                   
+                }
+            }).then(response => {
+                if(response.ok) {
+                    location.reload(); // 성공 시 새로고침
+                } else {
+                    alert('변경에 실패했습니다.');
+                }
+            });
+        }
+    </script>
+</th:block>
+</html>

@@ -112,5 +112,23 @@ public class User {
 	    this.status = UserStatus.ACTIVE;
 	    this.enabled = true;
 	}
+	
+	// 관리자에 의한 상태 변경(정지, 복구 등)
+	public void updateStatusByAdmin(UserStatus newStatus) {
+		this.status = newStatus;
+		//ACTIVE 일 때만 로그인이 가능하도록 enabled 상태를 동기화
+		this.enabled = (newStatus == UserStatus.ACTIVE);
+	}
+	
+	// 관리자에 의한 권한 변경
+	public void updateRoleByAdmin(Role newRole) {
+		this.role = newRole;
+	}
+	
+	// BANNED 상태
+	public void ban() {
+		this.status = UserStatus.BANNED;
+		this.enabled = false;
+	}
 }
 

@@ -18,6 +18,8 @@
         .btn-auth:hover { transform: translateY(-1px); }
         .lang-link { font-size: 0.8rem; color: #6c757d; text-decoration: none; transition: color 0.2s; font-weight: bold; }
         .lang-link:hover { color: #0d6efd; }
+        /* 관리자 메뉴 강조 스타일 */
+        .admin-link { color: #dc3545 !important; font-weight: 700 !important; }
     </style>
 </head>
 
@@ -46,7 +48,7 @@
                     <a th:if="${#locale.language == 'ko'}" th:href="@{/(lang='ja')}" class="lang-link">
                         <i class="bi bi-globe me-1"></i>JP
                     </a>
-                    <a th:if="${#locale.language == 'ja'}" th:href="@{/(lang='ko')}" class="lang-link">
+                    <a th:if="${#locale.language == 'ja'}" th:href="@{/(lang='ko'}" class="lang-link">
                         <i class="bi bi-globe me-1"></i>KO
                     </a>
                 </div>
@@ -59,6 +61,13 @@
                             <span sec:authentication="name"></span><span th:text="#{nav.user.suffix}">님</span>
                         </a>
                         <ul class="dropdown-menu dropdown-menu-end shadow border-0 mt-2">
+                            <li sec:authorize="hasRole('ADMIN')">
+                                <a class="dropdown-item small admin-link" th:href="@{/admin/dashboard}">
+                                    <i class="bi bi-shield-lock-fill me-1"></i>관리자 페이지
+                                </a>
+                            </li>
+                            <li sec:authorize="hasRole('ADMIN')"><hr class="dropdown-divider"></li>
+                            
                             <li><a class="dropdown-item small" th:href="@{/mypage}" th:text="#{nav.mypage}">마이페이지</a></li>
                             <li><hr class="dropdown-divider"></li>
                             <li>

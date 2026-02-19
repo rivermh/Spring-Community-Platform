@@ -8,8 +8,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import com.community.platform.user.entity.User;
-
-;
+import com.community.platform.common.UserStatus;
 
 public class CustomUserDetails implements UserDetails {
 
@@ -18,10 +17,7 @@ public class CustomUserDetails implements UserDetails {
     public CustomUserDetails(User user) {
         this.user = user;
     }
-  
-    /**
-     * 권한 정보
-     */
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(
@@ -29,27 +25,21 @@ public class CustomUserDetails implements UserDetails {
         );
     }
 
-    /**
-     * 비밀번호 (BCrypt 암호화된 값)
-     */
     @Override
     public String getPassword() {
         return user.getPassword();
     }
 
-    /**
-     * 로그인 ID (username)
-     */
     @Override
     public String getUsername() {
         return user.getUsername();
     }
 
-    /* ===== 계정 상태 (일단 전부 true) ===== */
+    /* ===== 계정 상태 체크 로직 (수정됨) ===== */
 
     @Override
     public boolean isAccountNonExpired() {
-        return true;
+        return true; 
     }
 
     @Override
@@ -57,17 +47,24 @@ public class CustomUserDetails implements UserDetails {
         return true;
     }
 
+    /**
+     * 계정 활성화 여부
+     * 관리자가 정지하거나 사용자가 탈퇴해서 enabled가 false면 로그인 차단
+     */
     @Override
     public boolean isEnabled() {
-        return true; // 일단 로그인 프로세스는 타게 함
+        return user.isEnabled();
     }
 
+    /**
+     * 계정 잠금 여부
+     * 상태가 BANNED인 경우 잠긴 계정으로 간주하여 차단
+     */
     @Override
     public boolean isAccountNonLocked() {
-        return true; // 여기서 false를 주면 LockedException이 발생함
+        return user.getStatus() != UserStatus.BANNED;
     }
 
-    /* ===== 필요하면 User 꺼내 쓰기 ===== */
     public User getUser() {
         return user;
     }

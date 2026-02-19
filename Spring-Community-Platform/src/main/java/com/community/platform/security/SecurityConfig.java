@@ -47,6 +47,9 @@ public class SecurityConfig {
 							"/css/**",
 							"/js/**"
 					).permitAll()
+					
+					// 관리자 권한 설정 /admin/api/로 시작하는 모든 요청은 ADMIN 권한 필요
+					.requestMatchers("/admin/**").hasRole("ADMIN")
 					.anyRequest().authenticated()
 			)
 			
