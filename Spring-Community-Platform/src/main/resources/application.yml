@@ -8,6 +8,13 @@ spring:
     username: root
     password: '0000'
 
+
+  messages:
+    basename: messages       
+    encoding: UTF-8           # 인코딩은 반드시 UTF-8
+    fallback-to-system-locale: true  
+
+
   jpa:
     database: mysql
     database-platform: org.hibernate.dialect.MySQLDialect
@@ -37,3 +44,4 @@ spring:
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
+

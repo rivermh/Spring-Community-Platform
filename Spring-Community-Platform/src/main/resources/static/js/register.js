@@ -1,9 +1,12 @@
 document.addEventListener("DOMContentLoaded", () => {
+    // HTML에 숨겨둔 번역 메시지 가져오기
+    const msgElement = document.getElementById("js-messages");
+    const msg = msgElement ? msgElement.dataset : {};
 
     const usernameInput = document.getElementById("username");
     const emailInput = document.getElementById("email");
     const passwordInput = document.querySelector("input[name='password']");
-  	const passwordConfirmInput = document.getElementById("password-confirm");
+    const passwordConfirmInput = document.getElementById("password-confirm");
 
     const usernameBtn = document.getElementById("username-check-btn");
     const emailBtn = document.getElementById("email-check-btn");
@@ -20,15 +23,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // 정규식
     const usernameRegex = /^[a-zA-Z0-9]{4,20}$/;
-    const passwordRegex =
-        /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+=-]{8,}$/;
+    const passwordRegex = /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d!@#$%^&*()_+=-]{8,}$/;
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
     function updateSubmitButton() {
         submitBtn.disabled = !(usernameOk && emailOk && passwordOk);
     }
     
-     /* =====================
+    /* =====================
        비밀번호 실시간 체크
        ===================== */
     function validatePassword() {
@@ -36,16 +38,15 @@ document.addEventListener("DOMContentLoaded", () => {
         const confirm = passwordConfirmInput.value;
 
         if (!passwordRegex.test(pw)) {
-            passwordMsg.textContent =
-                "비밀번호는 8자 이상, 영문 + 숫자를 포함해야 합니다.";
+            passwordMsg.textContent = msg.pwPolicy; // 번역 적용
             passwordMsg.style.color = "red";
             passwordOk = false;
         } else if (pw !== confirm) {
-            passwordMsg.textContent = "비밀번호가 일치하지 않습니다.";
+            passwordMsg.textContent = msg.pwMismatch; // 번역 적용
             passwordMsg.style.color = "red";
             passwordOk = false;
         } else {
-            passwordMsg.textContent = "비밀번호가 일치합니다.";
+            passwordMsg.textContent = msg.pwMatch; // 번역 적용
             passwordMsg.style.color = "green";
             passwordOk = true;
         }
@@ -69,13 +70,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (!usernameRegex.test(username)) {
-            usernameMsg.textContent = "아이디는 4~20자의 영문/숫자만 가능합니다.";
+            usernameMsg.textContent = msg.idPolicy; // 번역 적용
             usernameMsg.style.color = "red";
             updateSubmitButton();
             return;
         }
 
-        usernameMsg.textContent = "형식은 올바릅니다. 중복확인을 해주세요.";
+        usernameMsg.textContent = msg.formatOk; // 번역 적용
         usernameMsg.style.color = "gray";
         updateSubmitButton();
     });
@@ -86,7 +87,7 @@ document.addEventListener("DOMContentLoaded", () => {
     usernameBtn.addEventListener("click", async () => {
         const username = usernameInput.value.trim();
         if (!usernameRegex.test(username)) {
-            alert("아이디 형식을 먼저 확인하세요.");
+            alert(msg.alertCheck); // 번역 적용
             return;
         }
 
@@ -94,39 +95,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const available = await res.json();
 
         if (available) {
-            usernameMsg.textContent = "사용 가능한 아이디입니다.";
+            usernameMsg.textContent = msg.idOk; // 번역 적용
             usernameMsg.style.color = "green";
             usernameOk = true;
         } else {
-            usernameMsg.textContent = "이미 사용 중인 아이디입니다.";
+            usernameMsg.textContent = msg.idDuplicate; // 번역 적용
             usernameMsg.style.color = "red";
             usernameOk = false;
-        }
-        updateSubmitButton();
-    });
-
-    /* ======================
-       비밀번호 정책 (실시간)
-    ====================== */
-    passwordInput.addEventListener("input", () => {
-        const password = passwordInput.value;
-
-        if (!password) {
-            passwordMsg.textContent = "";
-            passwordOk = false;
-            updateSubmitButton();
-            return;
-        }
-
-        if (!passwordRegex.test(password)) {
-            passwordMsg.textContent =
-                "비밀번호는 8자 이상, 영문과 숫자를 포함해야 합니다.";
-            passwordMsg.style.color = "red";
-            passwordOk = false;
-        } else {
-            passwordMsg.textContent = "사용 가능한 비밀번호입니다.";
-            passwordMsg.style.color = "green";
-            passwordOk = true;
         }
         updateSubmitButton();
     });
@@ -145,13 +120,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         if (!emailRegex.test(email)) {
-            emailMsg.textContent = "이메일 형식이 올바르지 않습니다.";
+            emailMsg.textContent = msg.emailInvalid; // 번역 적용
             emailMsg.style.color = "red";
             updateSubmitButton();
             return;
         }
 
-        emailMsg.textContent = "형식은 올바릅니다. 중복확인을 해주세요.";
+        emailMsg.textContent = msg.formatOk; // 번역 적용
         emailMsg.style.color = "gray";
         updateSubmitButton();
     });
@@ -162,7 +137,7 @@ document.addEventListener("DOMContentLoaded", () => {
     emailBtn.addEventListener("click", async () => {
         const email = emailInput.value.trim();
         if (!emailRegex.test(email)) {
-            alert("이메일 형식을 먼저 확인하세요.");
+            alert(msg.alertCheck); // 번역 적용
             return;
         }
 
@@ -170,11 +145,11 @@ document.addEventListener("DOMContentLoaded", () => {
         const available = await res.json();
 
         if (available) {
-            emailMsg.textContent = "사용 가능한 이메일입니다.";
+            emailMsg.textContent = msg.emailOk; // 번역 적용
             emailMsg.style.color = "green";
             emailOk = true;
         } else {
-            emailMsg.textContent = "이미 등록된 이메일입니다.";
+            emailMsg.textContent = msg.emailDuplicate; // 번역 적용
             emailMsg.style.color = "red";
             emailOk = false;
         }

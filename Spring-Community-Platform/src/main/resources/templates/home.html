@@ -12,27 +12,39 @@
 				
 				<div class="card-body p-5 text-center">
 					<div class="mb-4">
-						<h1 class="mt-3 fw-bold display-5">Community</h1>
-						<p class="text-muted">나만의 소소한 이야기 공간</p>
+						<h1 class="mt-3 fw-bold display-5" th:text="#{app.name}">Community</h1>
+						<p class="text-muted" th:text="#{home.subtitle}">나만의 소소한 이야기 공간</p>
 					</div>
 
 					<hr class="my-4 opacity-25">
 
 					<div sec:authorize="isAnonymous()">
-						<h5 class="fw-semibold mb-3">반갑습니다!</h5>
-						<p class="text-muted mb-4 small">
+						<h5 class="fw-semibold mb-3" th:text="#{home.welcome.anon}">반갑습니다!</h5>
+						<p class="text-muted mb-4 small" th:utext="#{home.login.guide}">
 							로그인하시면 게시글 작성과 다양한<br>
 							커뮤니티 활동에 참여하실 수 있습니다.
 						</p>
 
 						<div class="d-flex justify-content-center gap-2 mb-3">
-							<a th:href="@{/login}" class="btn btn-primary px-4"> 로그인 </a> 
-							<a th:href="@{/register}" class="btn btn-outline-secondary px-4"> 회원가입 </a>
+							<a th:href="@{/login}" class="btn btn-primary px-4" th:text="#{home.btn.login}"> 로그인 </a> 
+							<a th:href="@{/register}" class="btn btn-outline-secondary px-4" th:text="#{home.btn.register}"> 회원가입 </a>
+						</div>
+
+						<div class="mb-3" th:if="${#locale.language == 'ko'}">
+							<a th:href="@{/(lang='ja')}" class="text-decoration-none small text-secondary">
+								🌐 <strong>日本語</strong>
+							</a>
+						</div>
+						<div class="mb-3" th:if="${#locale.language == 'ja'}">
+							<a th:href="@{/(lang='ko')}" class="text-decoration-none small text-secondary">
+								🌐 <strong>한국어</strong>
+							</a>
 						</div>
 						
 						<div class="mt-2">
 							<a th:href="@{/account/find-password}"
-								class="text-muted small text-decoration-none">
+								class="text-muted small text-decoration-none"
+								th:text="#{home.find.account}">
 								아이디 또는 비밀번호를 잊으셨나요?
 							</a>
 						</div>
@@ -41,22 +53,29 @@
 					<div sec:authorize="isAuthenticated()">
 						<div class="mb-4">
 							<h4 class="fw-bold">
-								환영합니다, <span class="text-primary" sec:authentication="name"></span>님 👋
+								<span th:text="#{home.welcome.user(${#authentication.name})}">환영합니다, 사용자님 👋</span>
 							</h4>
-							<p class="text-muted small">오늘도 새로운 소식을 확인해보세요.</p>
+							<p class="text-muted small" th:text="#{home.today.msg}">오늘도 새로운 소식을 확인해보세요.</p>
 						</div>
 				
-						<div class="row g-2">
+						<div class="row g-2 mb-4">
 							<div class="col-6">
 								<a th:href="@{/posts}" class="btn btn-light border w-100 py-3 shadow-sm">
-									<div class="fw-bold">자유게시판</div>
+									<div class="fw-bold" th:text="#{home.btn.board}">자유게시판</div>
 								</a>
 							</div>
 							<div class="col-6">
 								<a th:href="@{/mypage}" class="btn btn-light border w-100 py-3 shadow-sm">
-									<div class="fw-bold">마이페이지</div>
+									<div class="fw-bold" th:text="#{home.btn.mypage}">마이페이지</div>
 								</a>
 							</div>
+						</div>
+
+						<div th:if="${#locale.language == 'ko'}">
+							<a th:href="@{/(lang='ja')}" class="text-decoration-none small text-secondary">🌐 日本語</a>
+						</div>
+						<div th:if="${#locale.language == 'ja'}">
+							<a th:href="@{/(lang='ko')}" class="text-decoration-none small text-secondary">🌐 한국어</a>
 						</div>
 					</div>
 

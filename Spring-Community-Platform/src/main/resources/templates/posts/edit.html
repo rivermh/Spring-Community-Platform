@@ -1,98 +1,91 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-      xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-      th:replace="~{layout/layout :: layout(content=~{::content})}">
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	th:replace="~{layout/layout :: layout(content=~{::content})}">
 
 <th:block th:fragment="content">
-    <div class="row justify-content-center">
-        <div class="col-lg-9 col-xl-8">
+	<div class="row justify-content-center">
+		<div class="col-lg-9 col-xl-8">
 
-            <div class="mb-4">
-                <h2 class="fw-bold text-dark mb-1" style="letter-spacing: -1px;">게시글 수정</h2>
-                <p class="text-muted small">기존의 내용을 다듬어 더 멋진 글을 완성해보세요.</p>
-            </div>
+			<div class="mb-4">
+				<h2 class="fw-bold text-dark mb-1" style="letter-spacing: -1px;"
+					th:text="#{post.edit.title}">게시글 수정</h2>
+				<p class="text-muted small" th:text="#{post.edit.subtitle}">기존의
+					내용을 다듬어 더 멋진 글을 완성해보세요.</p>
+			</div>
 
-            <div class="card shadow-sm border-0 rounded-4">
-                <div class="card-body p-4 p-md-5">
-                    <form th:action="@{|/posts/${post.id}/edit|}" method="post"
-                          onsubmit="if(this.title.value.trim() == '' || this.content.value.trim() == '') { alert('공백 제외, 제목과 내용을 모두 입력해주세요!'); return false; }">
+			<div class="card shadow-sm border-0 rounded-4">
+				<div class="card-body p-4 p-md-5">
+					<form th:action="@{|/posts/${post.id}/edit|}" method="post"
+						th:onsubmit="if(this.title.value.trim() == '' || this.content.value.trim() == '') { alert([[#{post.form.err.empty}]]); return false; }">
 
-                        <div class="mb-4">
-                            <label class="form-label fw-bold text-dark small text-uppercase">Title</label>
-                            <input type="text"
-                                   name="title"
-                                   class="form-control border-0 bg-light py-3 px-4 rounded-3 fw-medium"
-                                   placeholder="제목을 입력하세요"
-                                   th:value="${post.title}"
-                                   required
-                                   pattern=".*\S.*"
-                                   oninvalid="this.setCustomValidity('수정할 제목을 입력해주세요! (공백 제외)')"
-                                   oninput="this.setCustomValidity('')">
-                        </div>
+						<div class="mb-4">
+							<label class="form-label fw-bold text-dark small text-uppercase"
+								th:text="#{post.form.label.title}">Title</label> <input
+								type="text" name="title"
+								class="form-control border-0 bg-light py-3 px-4 rounded-3 fw-medium"
+								th:placeholder="#{post.edit.placeholder.title}"
+								th:value="${post.title}" required pattern=".*\S.*"
+								th:oninvalid="this.setCustomValidity([[#{post.edit.err.title}]])"
+								oninput="this.setCustomValidity('')">
+						</div>
 
-                        <div class="mb-4">
-                            <label class="form-label fw-bold text-dark small text-uppercase">Content</label>
-                            <textarea name="content"
-                                      class="form-control border-0 bg-light p-4 rounded-3"
-                                      rows="12"
-                                      style="resize: none; line-height: 1.6;"
-                                      placeholder="내용을 입력하세요"
-                                      required
-                                      oninvalid="this.setCustomValidity('수정할 내용을 입력해주세요!')"
-                                      oninput="this.setCustomValidity('')"
-                                      th:text="${post.content}"></textarea>
-                        </div>
+						<div class="mb-4">
+							<label class="form-label fw-bold text-dark small text-uppercase"
+								th:text="#{post.form.label.content}">Content</label>
+							<textarea name="content"
+								class="form-control border-0 bg-light p-4 rounded-3" rows="12"
+								style="resize: none; line-height: 1.6;"
+								th:placeholder="#{post.edit.placeholder.content}" required
+								th:oninvalid="this.setCustomValidity([[#{post.edit.err.content}]])"
+								oninput="this.setCustomValidity('')" th:text="${post.content}"></textarea>
+						</div>
 
-                        <hr class="my-4 opacity-25">
+						<hr class="my-4 opacity-25">
 
-                        <div class="d-flex justify-content-between align-items-center">
-                            <a th:href="@{|/posts/${post.id}|}"
-                               class="btn btn-link text-muted text-decoration-none small">
-                                취소하고 돌아가기
-                            </a>
+						<div class="d-flex justify-content-between align-items-center">
+							<a th:href="@{|/posts/${post.id}|}"
+								class="btn btn-link text-muted text-decoration-none small"
+								th:text="#{post.edit.btn.cancel}"> 취소하고 돌아가기 </a>
 
-                            <div class="d-flex gap-2">
-                                <button type="submit" class="btn btn-primary px-5 py-2 rounded-pill fw-bold shadow-sm">
-                                    수정 완료
-                                </button>
-                            </div>
-                        </div>
+							<div class="d-flex gap-2">
+								<button type="submit"
+									class="btn btn-primary px-5 py-2 rounded-pill fw-bold shadow-sm"
+									th:text="#{post.edit.btn.submit}">수정 완료</button>
+							</div>
+						</div>
+					</form>
+				</div>
+			</div>
+			<div class="mt-4 text-center">
+				<p class="text-muted small" th:text="#{post.edit.info}">💡 수정한
+					내용은 즉시 게시판에 반영됩니다.</p>
+			</div>
+		</div>
+	</div>
 
-                    </form>
-                </div>
-            </div>
-            
-            <div class="mt-4 text-center">
-                <p class="text-muted small">
-                    💡 수정한 내용은 즉시 게시판에 반영됩니다.
-                </p>
-            </div>
+	<style>
+.form-control {
+	transition: all 0.2s ease-in-out;
+	border: 2px solid transparent !important;
+}
 
-        </div>
-    </div>
+.form-control:focus {
+	background-color: #fff !important;
+	border: 2px solid #0d6efd !important;
+	box-shadow: 0 4px 12px rgba(13, 110, 253, 0.08) !important;
+}
 
-    <style>
-        .form-control {
-            transition: all 0.2s ease-in-out;
-            border: 2px solid transparent !important;
-        }
+/* 공백이거나 비어있어서 유효하지 않을 때 포커스되면 빨간색 */
+.form-control:invalid:focus {
+	border: 2px solid #dc3545 !important;
+	box-shadow: 0 4px 12px rgba(220, 53, 69, 0.08) !important;
+}
 
-        .form-control:focus {
-            background-color: #fff !important;
-            border: 2px solid #0d6efd !important;
-            box-shadow: 0 4px 12px rgba(13, 110, 253, 0.08) !important;
-        }
-
-        /* 공백이거나 비어있어서 유효하지 않을 때 포커스되면 빨간색 */
-        .form-control:invalid:focus {
-            border: 2px solid #dc3545 !important;
-            box-shadow: 0 4px 12px rgba(220, 53, 69, 0.08) !important;
-        }
-
-        /* 유효한 입력일 때 초록색 (사용자 피드백용) */
-        .form-control:valid:not(:placeholder-shown) {
-            border: 2px solid #198754 !important;
-        }
-    </style>
+/* 유효한 입력일 때 초록색 (사용자 피드백용) */
+.form-control:valid:not(:placeholder-shown) {
+	border: 2px solid #198754 !important;
+}
+</style>
 </th:block>
 </html>

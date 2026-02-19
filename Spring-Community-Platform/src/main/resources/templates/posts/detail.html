@@ -9,7 +9,7 @@
 
             <div class="mb-3">
                 <a th:href="@{/posts}" class="btn btn-link text-decoration-none p-0 text-muted small">
-                    <i class="bi bi-arrow-left me-1"></i> 목록으로 돌아가기
+                    <i class="bi bi-arrow-left me-1"></i> <span th:text="#{post.detail.back}">목록으로 돌아가기</span>
                 </a>
             </div>
 
@@ -19,7 +19,8 @@
                     <div class="card-body p-4 p-md-5">
                         
                         <div class="mb-3">
-                            <span class="badge bg-primary-subtle text-primary mb-2 px-3 py-2 rounded-pill small fw-bold">자유게시판</span>
+                            <span class="badge bg-primary-subtle text-primary mb-2 px-3 py-2 rounded-pill small fw-bold" 
+                                  th:text="#{post.detail.category}">자유게시판</span>
                             <h2 class="fw-bold text-dark lh-base" th:text="${post.title}">제목</h2>
                         </div>
 
@@ -37,9 +38,12 @@
                             </div>
                             
                             <div class="d-flex gap-2" th:if="${loginUser != null and loginUser.username == post.username}">
-                                <a th:href="@{|/posts/${post.id}/edit|}" class="btn btn-sm btn-outline-light text-dark border">수정</a>
-                                <form th:action="@{|/posts/${post.id}/delete|}" method="post" onsubmit="return confirm('정말 삭제하시겠습니까?')">
-                                    <button class="btn btn-sm btn-outline-danger">삭제</button>
+                                <a th:href="@{|/posts/${post.id}/edit|}" 
+                                   class="btn btn-sm btn-outline-light text-dark border" 
+                                   th:text="#{post.detail.btn.edit}">수정</a>
+                                <form th:action="@{|/posts/${post.id}/delete|}" method="post" 
+                                      th:onsubmit="return confirm([[#{post.detail.confirm.delete}]])">
+                                    <button class="btn btn-sm btn-outline-danger" th:text="#{post.detail.btn.delete}">삭제</button>
                                 </form>
                             </div>
                         </div>
@@ -52,14 +56,17 @@
                         <div class="text-center py-4 border-top border-bottom bg-light-subtle rounded-4 mb-4">
                             <div th:if="${loginUser != null}">
                                 <button id="like-btn" class="btn btn-white border shadow-sm px-4 rounded-pill fw-bold">
-                                    <span class="text-danger">❤️</span> 좋아요
+                                    <span class="text-danger">❤️</span> <span th:text="#{post.detail.like.btn}">좋아요</span>
                                 </button>
                                 <div class="mt-2 small text-muted">
-                                    현재 <span class="fw-bold text-dark" id="like-count" th:text="${post.likeCount}">0</span>명이 좋아합니다.
+                                    <span th:text="#{post.detail.like.count(${post.likeCount})}">현재 0명이 좋아합니다.</span>
                                 </div>
                             </div>
                             <div th:if="${loginUser == null}" class="text-muted small py-2">
-                                <i class="bi bi-info-circle me-1"></i> 좋아요를 누르려면 <a th:href="@{/login}" class="text-primary text-decoration-none fw-bold">로그인</a>이 필요합니다.
+                                <i class="bi bi-info-circle me-1"></i> 
+                                <span th:text="#{post.detail.like.login.pre}">좋아요를 누르려면 </span>
+                                <a th:href="@{/login}" class="text-primary text-decoration-none fw-bold" th:text="#{post.detail.login.link}">로그인</a>
+                                <span th:text="#{post.detail.like.login.post}">이 필요합니다.</span>
                             </div>
                         </div>
                     </div>
@@ -68,7 +75,7 @@
                 <div class="card shadow-sm border-0 rounded-4 mb-5">
                     <div class="card-body p-4 p-md-5">
                         <h5 class="fw-bold mb-4 text-dark">
-                            <i class="bi bi-chat-left-text me-2 text-primary"></i> 댓글
+                            <i class="bi bi-chat-left-text me-2 text-primary"></i> <span th:text="#{post.detail.comment.title}">댓글</span>
                         </h5>
 
                         <div id="comment-list" class="comment-container mb-4"></div>
@@ -80,24 +87,27 @@
                             <form id="comment-form">
                                 <div class="form-floating mb-2">
                                     <textarea id="comment-content" class="form-control border-0 bg-light rounded-4" 
-                                              placeholder="따뜻한 댓글을 남겨주세요" style="height: 120px; resize: none;" required></textarea>
-                                    <label for="comment-content" class="text-muted small">따뜻한 댓글을 남겨주세요</label>
+                                              th:placeholder="#{post.detail.comment.placeholder}" style="height: 120px; resize: none;" required></textarea>
+                                    <label for="comment-content" class="text-muted small" th:text="#{post.detail.comment.placeholder}">따뜻한 댓글을 남겨주세요</label>
                                 </div>
                                 <div class="text-end">
-                                    <button class="btn btn-primary px-4 py-2 rounded-pill fw-bold shadow-sm">댓글 등록</button>
+                                    <button class="btn btn-primary px-4 py-2 rounded-pill fw-bold shadow-sm" th:text="#{post.detail.comment.btn.submit}">댓글 등록</button>
                                 </div>
                             </form>
                         </div>
 
                         <div th:if="${loginUser == null}" class="bg-light p-4 rounded-4 text-center">
                             <p class="text-muted small mb-0">
-                                댓글을 작성하려면 <a th:href="@{/login}" class="text-primary fw-bold text-decoration-none">로그인</a>하세요.
+                                <span th:text="#{post.detail.comment.login.pre}">댓글을 작성하려면 </span>
+                                <a th:href="@{/login}" class="text-primary fw-bold text-decoration-none" th:text="#{post.detail.login.link}">로그인</a>
+                                <span th:text="#{post.detail.comment.login.post}">하세요.</span>
                             </p>
                         </div>
                     </div>
                 </div>
 
-            </div> </div>
+            </div> 
+        </div>
     </div>
 
     <style>

@@ -10,15 +10,14 @@
             <div class="card shadow-sm border-0 mt-5">
                 <div class="card-body p-4">
 
-                    <h4 class="fw-bold mb-4">내가 쓴 글</h4>
+                    <h4 class="fw-bold mb-4" th:text="#{mypage.posts.title}">내가 쓴 글</h4>
 
-                    <!-- 게시글 없는 경우 -->
                     <div th:if="${posts.totalElements == 0}"
-                         class="text-center text-muted py-5">
+                         class="text-center text-muted py-5"
+                         th:text="#{mypage.posts.empty}">
                         아직 작성한 게시글이 없습니다.
                     </div>
 
-                    <!-- 게시글 목록 -->
                     <div th:if="${posts.totalElements > 0}"
                          class="list-group">
 
@@ -26,28 +25,29 @@
                            th:href="@{/posts/{id}(id=${post.id})}"
                            class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
 
-                            <span th:text="${post.title}"></span>
+                            <span th:text="${post.title}">게시글 제목</span>
 
                             <small class="text-muted"
                                    th:text="${#temporals.format(post.createdAt, 'yyyy-MM-dd')}">
+                                2024-05-20
                             </small>
                         </a>
-
                     </div>
 
-                    <!-- 페이징 -->
                     <nav th:if="${posts.totalPages > 1}" class="mt-4">
                         <ul class="pagination justify-content-center">
 
                             <li class="page-item"
                                 th:classappend="${posts.first} ? 'disabled'">
                                 <a class="page-link"
-                                   th:href="@{/mypage/posts(page=${posts.number - 1})}">
+                                   th:href="@{/mypage/posts(page=${posts.number - 1})}"
+                                   th:text="#{mypage.btn.prev}">
                                     이전
                                 </a>
                             </li>
 
                             <li class="page-item"
+                                th:if="${posts.totalPages > 0}"
                                 th:each="i : ${#numbers.sequence(0, posts.totalPages - 1)}"
                                 th:classappend="${i == posts.number} ? 'active'">
                                 <a class="page-link"
@@ -59,7 +59,8 @@
                             <li class="page-item"
                                 th:classappend="${posts.last} ? 'disabled'">
                                 <a class="page-link"
-                                   th:href="@{/mypage/posts(page=${posts.number + 1})}">
+                                   th:href="@{/mypage/posts(page=${posts.number + 1})}"
+                                   th:text="#{mypage.btn.next}">
                                     다음
                                 </a>
                             </li>
@@ -71,11 +72,13 @@
 
                     <div class="d-flex gap-2">
                         <a th:href="@{/mypage}"
-                           class="btn btn-outline-secondary w-50">
+                           class="btn btn-outline-secondary w-50"
+                           th:text="#{mypage.btn.back}">
                             마이페이지
                         </a>
                         <a th:href="@{/}"
-                           class="btn btn-outline-primary w-50">
+                           class="btn btn-outline-primary w-50"
+                           th:text="#{mypage.btn.home}">
                             홈으로
                         </a>
                     </div>

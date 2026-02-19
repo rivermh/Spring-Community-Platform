@@ -14,25 +14,25 @@
                         <div class="avatar-placeholder mb-3">
                             <i class="bi bi-person-fill display-4 text-primary"></i>
                         </div>
-                        <h3 class="fw-bold mb-1">My Page</h3>
-                        <p class="text-muted small">계정 정보 및 활동 내역을 확인하세요.</p>
+                        <h3 class="fw-bold mb-1" th:text="#{mypage.title}">My Page</h3>
+                        <p class="text-muted small" th:text="#{mypage.subtitle}">계정 정보 및 활동 내역을 확인하세요.</p>
                     </div>
 
                     <div class="bg-light rounded-3 p-3 mb-4">
                         <div class="d-flex justify-content-between mb-2 pb-2 border-bottom border-white">
-                            <span class="text-muted small">아이디</span>
+                            <span class="text-muted small" th:text="#{mypage.label.id}">아이디</span>
                             <span class="fw-bold" th:text="${user.username}"></span>
                         </div>
                         <div class="d-flex justify-content-between mb-2 pb-2 border-bottom border-white">
-                            <span class="text-muted small">이메일</span>
+                            <span class="text-muted small" th:text="#{mypage.label.email}">이메일</span>
                             <span th:text="${user.email}"></span>
                         </div>
                         <div class="d-flex justify-content-between mb-2 pb-2 border-bottom border-white">
-                            <span class="text-muted small">생년월일</span>
+                            <span class="text-muted small" th:text="#{mypage.label.birth}">생년월일</span>
                             <span th:text="${user.birth}"></span>
                         </div>
                         <div class="d-flex justify-content-between">
-                            <span class="text-muted small">가입일</span>
+                            <span class="text-muted small" th:text="#{mypage.label.regdate}">가입일</span>
                             <span class="small" th:text="${#temporals.format(user.createdAt, 'yyyy-MM-dd HH:mm')}"></span>
                         </div>
                     </div>
@@ -40,33 +40,39 @@
                     <div class="row g-2 mb-4">
                         <div class="col-6">
                             <a th:href="@{/mypage/posts}" class="btn btn-outline-primary w-100 py-2 small">
-                                <i class="bi bi-file-earmark-text me-1"></i> 내가 쓴 글
+                                <i class="bi bi-file-earmark-text me-1"></i>
+                                <span th:text="#{mypage.btn.posts}">내가 쓴 글</span>
                             </a>
                         </div>
                         <div class="col-6">
                             <a th:href="@{/mypage/comments}" class="btn btn-outline-primary w-100 py-2 small">
-                                <i class="bi bi-chat-left-text me-1"></i> 내가 쓴 댓글
+                                <i class="bi bi-chat-left-text me-1"></i>
+                                <span th:text="#{mypage.btn.comments}">내가 쓴 댓글</span>
                             </a>
                         </div>
                         <div class="col-6">
                             <a th:href="@{/mypage/likes}" class="btn btn-outline-primary w-100 py-2 small">
-                                <i class="bi bi-heart me-1"></i> 좋아요한 글
+                                <i class="bi bi-heart me-1"></i>
+                                <span th:text="#{mypage.btn.likes}">좋아요한 글</span>
                             </a>
                         </div>
                         <div class="col-6">
                             <a th:href="@{/mypage/password}" class="btn btn-outline-warning w-100 py-2 small">
-                                <i class="bi bi-key me-1"></i> 비밀번호 변경
+                                <i class="bi bi-key me-1"></i>
+                                <span th:text="#{mypage.btn.pw.change}">비밀번호 변경</span>
                             </a>
                         </div>
                     </div>
 
                     <div class="d-flex gap-2">
                         <a th:href="@{/}" class="btn btn-light border w-50">
-                            <i class="bi bi-house-door me-1"></i> 홈으로
+                            <i class="bi bi-house-door me-1"></i>
+                            <span th:text="#{mypage.btn.home}">홈으로</span>
                         </a>
                         <form th:action="@{/logout}" method="post" class="w-50">
                             <button type="submit" class="btn btn-outline-danger w-100">
-                                <i class="bi bi-box-arrow-right me-1"></i> 로그아웃
+                                <i class="bi bi-box-arrow-right me-1"></i>
+                                <span th:text="#{mypage.btn.logout}">로그아웃</span>
                             </button>
                         </form>
                     </div>
@@ -75,8 +81,9 @@
 
                     <div class="text-center">
                         <form th:action="@{/mypage/withdraw}" method="post"
-                              onsubmit="return confirm('정말 탈퇴하시겠습니까? 탈퇴 후에는 데이터를 복구할 수 없습니다.');">
-                            <button type="submit" class="btn btn-link text-danger text-decoration-none small opacity-75">
+                              th:onsubmit="return confirm([[#{mypage.withdraw.confirm}]]);">
+                            <button type="submit" class="btn btn-link text-danger text-decoration-none small opacity-75"
+                                    th:text="#{mypage.withdraw.ask}">
                                 회원 탈퇴를 원하시나요?
                             </button>
                         </form>

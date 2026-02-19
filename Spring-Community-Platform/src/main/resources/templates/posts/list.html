@@ -7,12 +7,12 @@
 
 	<div class="row align-items-center mb-5">
 		<div class="col">
-			<h2 class="fw-bold text-dark mb-1" style="letter-spacing: -1px;">자유게시판</h2>
-			<p class="text-muted mb-0 small">다양한 생각을 나누는 공간입니다.</p>
+			<h2 class="fw-bold text-dark mb-1" style="letter-spacing: -1px;" th:text="#{post.list.title}">자유게시판</h2>
+			<p class="text-muted mb-0 small" th:text="#{post.list.subtitle}">다양한 생각을 나누는 공간입니다.</p>
 		</div>
 		<div class="col-auto">
 			<a sec:authorize="isAuthenticated()" th:href="@{/posts/new}"
-				class="btn btn-primary px-4 py-2 rounded-pill fw-bold shadow-sm">
+				class="btn btn-primary px-4 py-2 rounded-pill fw-bold shadow-sm" th:text="#{post.list.btn.new}">
 				새 글 작성
 			</a>
 		</div>
@@ -22,22 +22,22 @@
 		<form th:action="@{/posts}" method="get" class="row g-3 align-items-center">
 			<div class="col-md-auto">
 				<select name="sortType" class="form-select border-0 bg-light rounded-3 fw-medium" onchange="this.form.submit()">
-					<option value="LATEST" th:selected="${sortType == null || sortType.name() == 'LATEST'}">최신순</option>
-					<option value="OLDEST" th:selected="${sortType?.name() == 'OLDEST'}">오래된순</option>
-					<option value="TITLE" th:selected="${sortType?.name() == 'TITLE'}">제목순</option>
+					<option value="LATEST" th:selected="${sortType == null || sortType.name() == 'LATEST'}" th:text="#{post.list.sort.latest}">최신순</option>
+					<option value="OLDEST" th:selected="${sortType?.name() == 'OLDEST'}" th:text="#{post.list.sort.oldest}">오래된순</option>
+					<option value="TITLE" th:selected="${sortType?.name() == 'TITLE'}" th:text="#{post.list.sort.title}">제목순</option>
 				</select>
 			</div>
 
 			<div class="col-md ms-md-auto">
 				<div class="input-group">
 					<select name="searchType" class="form-select border-0 bg-light rounded-start-3" style="max-width: 100px;">
-						<option value="TITLE" th:selected="${searchType == null || searchType.name() == 'TITLE'}">제목</option>
-						<option value="CONTENT" th:selected="${searchType?.name() == 'CONTENT'}">내용</option>
-						<option value="AUTHOR" th:selected="${searchType?.name() == 'AUTHOR'}">작성자</option>
+						<option value="TITLE" th:selected="${searchType == null || searchType.name() == 'TITLE'}" th:text="#{post.list.search.title}">제목</option>
+						<option value="CONTENT" th:selected="${searchType?.name() == 'CONTENT'}" th:text="#{post.list.search.content}">내용</option>
+						<option value="AUTHOR" th:selected="${searchType?.name() == 'AUTHOR'}" th:text="#{post.list.search.author}">작성자</option>
 					</select>
 					<input type="text" name="keyword" class="form-control border-0 bg-light" 
-						placeholder="무엇을 찾으시나요?" th:value="${keyword}">
-					<button type="submit" class="btn btn-dark px-4 rounded-end-3 fw-bold">검색</button>
+						th:placeholder="#{post.list.search.placeholder}" th:value="${keyword}">
+					<button type="submit" class="btn btn-dark px-4 rounded-end-3 fw-bold" th:text="#{post.list.search.btn}">검색</button>
 				</div>
 			</div>
 		</form>
@@ -48,10 +48,10 @@
 			<table class="table table-hover align-middle mb-0">
 				<thead class="table-light">
 					<tr class="text-muted" style="font-size: 0.85rem; font-weight: 600;">
-						<th class="text-center py-3" style="width: 80px;">NO</th>
-						<th class="py-3">SUBJECT</th>
-						<th class="py-3" style="width: 120px;">AUTHOR</th>
-						<th class="text-center py-3" style="width: 150px;">DATE</th>
+						<th class="text-center py-3" style="width: 80px;" th:text="#{post.list.table.no}">NO</th>
+						<th class="py-3" th:text="#{post.list.table.subject}">SUBJECT</th>
+						<th class="py-3" style="width: 120px;" th:text="#{post.list.table.author}">AUTHOR</th>
+						<th class="text-center py-3" style="width: 150px;" th:text="#{post.list.table.date}">DATE</th>
 					</tr>
 				</thead>
 
@@ -79,7 +79,7 @@
 					<tr th:if="${#lists.isEmpty(posts)}">
 						<td colspan="4" class="text-center py-5">
 							<div class="py-4">
-								<p class="text-muted mb-0">등록된 게시글이 없습니다.</p>
+								<p class="text-muted mb-0" th:text="#{post.list.table.empty}">등록된 게시글이 없습니다.</p>
 							</div>
 						</td>
 					</tr>
@@ -88,7 +88,7 @@
 		</div>
 	</div>
 
-	<nav class="mt-5" th:if="${postPage.totalPages > 0}">
+	<nav class="mt-5" th:if="${postPage.totalPages > 1}">
 		<ul class="pagination justify-content-center gap-1">
 			<li class="page-item" th:classappend="${postPage.first} ? 'disabled'">
 				<a class="page-link rounded-circle border-0 text-dark" th:href="@{/posts(page=${postPage.number - 1}, keyword=${keyword}, searchType=${searchType}, sortType=${sortType})}">
@@ -96,12 +96,14 @@
 				</a>
 			</li>
 
-			<li class="page-item" th:each="i : ${#numbers.sequence(0, postPage.totalPages - 1)}"
-				th:classappend="${i == postPage.number} ? 'active'">
-				<a class="page-link rounded-circle border-0 fw-bold mx-1" 
-				   th:style="${i == postPage.number} ? 'background-color: #0d6efd; color: white;' : 'color: #333;'"
-				   th:href="@{/posts(page=${i}, keyword=${keyword}, searchType=${searchType}, sortType=${sortType})}" th:text="${i + 1}">1</a>
-			</li>
+			<th:block th:if="${postPage.totalPages > 0}">
+				<li class="page-item" th:each="i : ${#numbers.sequence(0, postPage.totalPages - 1)}"
+					th:classappend="${i == postPage.number} ? 'active'">
+					<a class="page-link rounded-circle border-0 fw-bold mx-1" 
+					   th:style="${i == postPage.number} ? 'background-color: #0d6efd; color: white;' : 'color: #333;'"
+					   th:href="@{/posts(page=${i}, keyword=${keyword}, searchType=${searchType}, sortType=${sortType})}" th:text="${i + 1}">1</a>
+				</li>
+			</th:block>
 
 			<li class="page-item" th:classappend="${postPage.last} ? 'disabled'">
 				<a class="page-link rounded-circle border-0 text-dark" th:href="@{/posts(page=${postPage.number + 1}, keyword=${keyword}, searchType=${searchType}, sortType=${sortType})}">
