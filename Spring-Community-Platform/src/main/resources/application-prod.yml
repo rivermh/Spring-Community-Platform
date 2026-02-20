@@ -1,19 +1,19 @@
 spring:
   datasource:
-    # 배포 서비스(Railway 등) 환경변수
-    url: ${DATABASE_URL}
-    username: ${DATABASE_USERNAME}
-    password: ${DATABASE_PASSWORD}
+    # Railway Variables에 적은 이름과 똑같이 맞춥니다
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
 
   jpa:
     database: mysql
-    database-platform: org.hibernate.dialect.MySQLDialect
     hibernate:
-      ddl-auto: none # 실제 서비스 데이터 보호
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
     properties:
       hibernate:
         format_sql: false
         show_sql: false
 
 app:
-  base-url: spring-community-platform-production.up.railway.app // 내 배포 주소
+  base-url: ${APP_BASE_URL}
