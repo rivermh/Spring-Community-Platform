@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 public class AdminMainController {
 
     private final AdminUserService adminUserService;
-    private final AdminPostService adminPostService; // 오타 수정 및 서비스 주입
+    private final AdminPostService adminPostService;
 
     // 관리자 메인 대시보드 (통계 데이터 연동)
     @GetMapping("/dashboard")

@@ -1,37 +1,18 @@
-server:
-  port: 8080
-
 spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/springsecurity?serverTimezone=Asia/Seoul
-    username: root
-    password: '0000'
-
+  profiles:
+    active: dev # 아무 설정 없으면 기본적으로 로컬(dev) 모드 실행
 
   messages:
-    basename: messages       
-    encoding: UTF-8           # 인코딩은 반드시 UTF-8
-    fallback-to-system-locale: true  
-
-
-  jpa:
-    database: mysql
-    database-platform: org.hibernate.dialect.MySQLDialect
-    open-in-view: false
-    hibernate:
-      ddl-auto: update   # 처음엔 update, 나중에 validate
-    properties:
-      hibernate:
-        format_sql: true
-        show_sql: true
+    basename: messages
+    encoding: UTF-8
+    fallback-to-system-locale: true
 
   thymeleaf:
     cache: false
     prefix: classpath:/templates/
     suffix: .html
-  
-  mvc: 
+
+  mvc:
     hiddenmethod:
       filter:
         enabled: true
@@ -44,4 +25,3 @@ spring:
     properties:
       mail.smtp.auth: true
       mail.smtp.starttls.enable: true
-
