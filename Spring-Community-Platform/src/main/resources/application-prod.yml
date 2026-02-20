@@ -1,6 +1,6 @@
 spring:
   datasource:
-    # 배포 서비스(Railway 등) 환경변수를 사용할 예정입니다. 일단 이렇게 두세요!
+    # 배포 서비스(Railway 등) 환경변수
     url: ${DATABASE_URL}
     username: ${DATABASE_USERNAME}
     password: ${DATABASE_PASSWORD}
@@ -16,4 +16,4 @@ spring:
         show_sql: false
 
 app:
-  base-url: https://your-project-url.com # 나중에 배포 주소 생기면 수정할 곳
+  base-url: spring-community-platform-production.up.railway.app // 내 배포 주소
