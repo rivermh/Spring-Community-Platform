@@ -8,28 +8,14 @@ spring:
   jpa:
     database: mysql
     hibernate:
-      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO}
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:none} # 배포 시에는 데이터 유지를 위해 none 또는 update
     properties:
       hibernate:
         format_sql: false
         show_sql: false
         highlight_sql: true
 
-  mail:
-    host: ${SPRING_MAIL_HOST}
-    port: ${SPRING_MAIL_PORT}
-    username: ${SPRING_MAIL_USERNAME}
-    password: ${SPRING_MAIL_PASSWORD}
-    properties:
-      mail:
-        smtp:
-          auth: true
-          starttls:
-            enable: true
-            required: true
 
 server:
   forward-headers-strategy: native
-
-app:
-  base-url: ${APP_BASE_URL}
+  port: ${PORT:8080} # Railway는 보통 PORT 환경변수를 사용
