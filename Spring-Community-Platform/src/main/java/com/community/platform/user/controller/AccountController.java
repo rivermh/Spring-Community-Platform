@@ -2,6 +2,7 @@ package com.community.platform.user.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -14,10 +15,26 @@ public class AccountController {
 
 	private final UserService userService;
 
-	// 복구 페이지
 	@GetMapping("/restore")
-	public String restoreForm() {
-		return "account/restore";
+	public String restoreForm(@RequestParam(name = "username", required = false) String username, 
+	                          Model model, 
+	                          RedirectAttributes ra) {
+	    
+	    // 1. 아이디가 아예 입력되지 않은 경우
+	    if (username == null || username.isBlank()) {
+	        ra.addFlashAttribute("error", "복구할 아이디를 입력해주세요."); // 👈 문구 추가
+	        return "redirect:/login";
+	    }
+
+	    // 2. 탈퇴한 유저가 아니거나 존재하지 않는 경우
+	    if (!userService.isUserWithdrawn(username)) {
+	        ra.addFlashAttribute("error", "해당 아이디는 복구 대상이 아닙니다."); // 👈 문구 추가
+	        return "redirect:/login";
+	    }
+
+	    // 3. 정상적인 경우
+	    model.addAttribute("username", username);
+	    return "account/restore";
 	}
 
 	// 계정 복구(Post)

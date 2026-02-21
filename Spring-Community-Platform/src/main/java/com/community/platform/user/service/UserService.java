@@ -233,4 +233,14 @@ public class UserService {
 		// 4. 사용한 토큰 삭제
 		tokenRepository.delete(verificationToken);
 	}
+	
+	// 이 계정이 정말 복구 가능한(탈퇴한) 계정인지 확인하는 메서드
+	@Transactional(readOnly = true)
+	public boolean isUserWithdrawn(String username) {
+	    // 유저가 없으면 false (복구 대상 아님)
+	    // 유저가 있고 상태가 WITHDRAWN이면 true (복구 대상 맞음)
+	    return userRepository.findByUsername(username)
+	            .map(user -> user.getStatus() == UserStatus.WITHDRAWN)
+	            .orElse(false);
+	}
 }
