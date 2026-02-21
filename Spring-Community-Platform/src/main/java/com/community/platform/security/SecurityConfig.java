@@ -45,7 +45,9 @@ public class SecurityConfig {
 					        "/resend-verification",
 					        "/reset-password",
 							"/css/**",
-							"/js/**"
+							"/js/**",
+							"/favicon.ico",
+							"/images/**"
 					).permitAll()
 					
 					// 관리자 권한 설정 /admin/api/로 시작하는 모든 요청은 ADMIN 권한 필요
