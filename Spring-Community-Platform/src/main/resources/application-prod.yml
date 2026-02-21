@@ -1,6 +1,6 @@
 spring:
   datasource:
-    # Railway Variables에 적은 이름과 똑같이 맞춥니다
+    # Railway Variables에 적은 이름과 똑같이 
     url: ${SPRING_DATASOURCE_URL}
     username: ${SPRING_DATASOURCE_USERNAME}
     password: ${SPRING_DATASOURCE_PASSWORD}
