@@ -9,9 +9,11 @@ import com.community.platform.email.service.EmailVerificationService;
 import com.community.platform.user.service.UserService;
 
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequiredArgsConstructor
+@Slf4j
 public class EmailVerificationController {
 
     private final EmailVerificationService emailVerificationService;
@@ -23,9 +25,11 @@ public class EmailVerificationController {
         try {
             // 검증 + 활성화 + 삭제를 한 번에 처리
             emailVerificationService.confirmVerification(token);
+            model.addAttribute("success", true); 
             model.addAttribute("message", "이메일 인증이 완료되었습니다. 로그인해주세요.");
         } catch (Exception e) {
             // 서비스에서 던진 예외 메시지(유효하지 않음, 만료됨 등)를 사용자에게 전달
+        	model.addAttribute("success", false); 
             model.addAttribute("message", e.getMessage());
         }
         return "email/verify-result";
@@ -34,10 +38,14 @@ public class EmailVerificationController {
     // 이메일 재전송 
     @GetMapping("/resend-verification")
     public String resend(@RequestParam("username") String username, Model model) {
+    	log.info("#### [재전송 요청 수신] username: {}", username); 
         try {
             userService.resendVerificationEmail(username);
+            model.addAttribute("success", true);
             model.addAttribute("message", "인증 메일이 성공적으로 재발송되었습니다.");
         } catch (Exception e) {
+        	log.error("#### [재전송 실패] 원인: {}", e.getMessage()); 
+        	model.addAttribute("success", false);
             model.addAttribute("message", "오류 발생: " + e.getMessage());
         }
         return "email/verify-result";
@@ -54,6 +62,7 @@ public class EmailVerificationController {
             model.addAttribute("token", token);
             return "account/reset-password-form"; // 
         } catch (Exception e) {
+        	model.addAttribute("success", false);
             model.addAttribute("message", e.getMessage());
             return "email/verify-result"; // 에러 시 결과 페이지로
         }
