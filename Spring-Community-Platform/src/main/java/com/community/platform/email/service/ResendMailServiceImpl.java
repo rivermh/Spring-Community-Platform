@@ -16,11 +16,11 @@ import java.util.Map;
 @Profile("prod") // Railway(운영) 환경에서만 이 클래스가 활성화
 public class ResendMailServiceImpl implements MailService {
 
-    @Value("${resend.api.key}") // Railway Variables에 추가할 이름
-    private String apiKey;
+	@Value("${resend.api.key:none}") 
+	private String apiKey;
 
-    @Value("${app.base-url}") // 설정한 Railway 도메인 주소
-    private String baseUrl;
+	@Value("${app.base-url:https://spring-community-platform-production.up.railway.app}") 
+	private String baseUrl;
 
     @Override
     public void sendVerificationMail(String to, String token) {
