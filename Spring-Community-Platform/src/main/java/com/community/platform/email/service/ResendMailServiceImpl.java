@@ -19,7 +19,7 @@ public class ResendMailServiceImpl implements MailService {
     @Value("${resend.api.key}") // Railway Variables에 추가할 이름
     private String apiKey;
 
-    @Value("${app.base.url}") // 설정한 Railway 도메인 주소
+    @Value("${app.base-url}") // 설정한 Railway 도메인 주소
     private String baseUrl;
 
     @Override

@@ -23,7 +23,6 @@ public class GmailServiceImpl implements MailService {
 
     // 1. 회원가입 인증 메일
     public void sendVerificationMail(String to, String token) {
-        // 더 이상 http://localhost... 를 직접 적지 않습니다.
         String link = baseUrl + "/verify-email?token=" + token;
         String subject = "[회원가입] 이메일 인증 안내";
         String text = "안녕하세요. 아래 링크를 클릭하여 회원가입 인증을 완료해 주세요:\n" + link;
