@@ -19,52 +19,63 @@ public class EmailVerificationController {
     private final EmailVerificationService emailVerificationService;
     private final UserService userService;
 
-    // 이메일 인증 링크 클릭 시 처리
+    /**
+     * [이메일 인증 링크 클릭 시 처리]
+     */
     @GetMapping("/verify-email")
     public String verify(@RequestParam("token") String token, Model model) {
         try {
-            // 검증 + 활성화 + 삭제를 한 번에 처리
+            // 토큰 검증 및 계정 활성화
             emailVerificationService.confirmVerification(token);
-            model.addAttribute("success", true); 
-            model.addAttribute("message", "이메일 인증이 완료되었습니다. 로그인해주세요.");
+            
+            model.addAttribute("success", true);
+            model.addAttribute("message", "이메일 인증이 성공적으로 완료되었습니다! 이제 모든 커뮤니티 활동을 시작하실 수 있습니다.");
         } catch (Exception e) {
-            // 서비스에서 던진 예외 메시지(유효하지 않음, 만료됨 등)를 사용자에게 전달
-        	model.addAttribute("success", false); 
-            model.addAttribute("message", e.getMessage());
+            log.error("#### [인증 실패] 토큰: {}, 사유: {}", token, e.getMessage());
+            
+            model.addAttribute("success", false);
+            model.addAttribute("message", "인증에 실패했습니다. 링크가 만료되었거나 이미 사용되었을 수 있습니다. 다시 시도해 주세요.");
         }
         return "email/verify-result";
     }
-    
-    // 이메일 재전송 
+
+    /**
+     * [인증 메일 재전송]
+     */
     @GetMapping("/resend-verification")
     public String resend(@RequestParam("username") String username, Model model) {
-    	log.info("#### [재전송 요청 수신] username: {}", username); 
+        log.info("#### [재전송 요청 수신] 대상 아이디: {}", username);
         try {
             userService.resendVerificationEmail(username);
+            
             model.addAttribute("success", true);
-            model.addAttribute("message", "인증 메일이 성공적으로 재발송되었습니다.");
+            model.addAttribute("message", "새로운 인증 메일을 보내드렸습니다. 메일함(또는 스팸함)을 확인해 주세요!");
         } catch (Exception e) {
-        	log.error("#### [재전송 실패] 원인: {}", e.getMessage()); 
-        	model.addAttribute("success", false);
-            model.addAttribute("message", "오류 발생: " + e.getMessage());
+            log.error("#### [재전송 실패] 아이디: {}, 원인: {}", username, e.getMessage());
+            
+            model.addAttribute("success", false);
+            model.addAttribute("message", "메일 발송 중 문제가 발생했습니다: " + e.getMessage());
         }
         return "email/verify-result";
     }
-    
+
+    /**
+     * [비밀번호 재설정 폼 요청]
+     */
     @GetMapping("/reset-password")
     public String showResetPasswordForm(@RequestParam("token") String token, Model model) {
         try {
-            // 1. 토큰이 유효한지 검사 (EmailVerificationService 활용)
-            // 만료되었거나 없는 토큰이면 여기서 예외가 터져서 catch문
+            // 토큰 유효성 선검사
             emailVerificationService.validateToken(token);
             
-            // 2. 유효하다면 HTML에 토큰을 전달하며 비번 변경 페이지 오픈
             model.addAttribute("token", token);
-            return "account/reset-password-form"; // 
+            return "account/reset-password-form";
         } catch (Exception e) {
-        	model.addAttribute("success", false);
-            model.addAttribute("message", e.getMessage());
-            return "email/verify-result"; // 에러 시 결과 페이지로
+            log.error("#### [비밀번호 재설정 접근 실패] 토큰: {}, 사유: {}", token, e.getMessage());
+            
+            model.addAttribute("success", false);
+            model.addAttribute("message", "비밀번호 재설정 링크가 유효하지 않습니다. 다시 요청해 주세요.");
+            return "email/verify-result";
         }
     }
 }

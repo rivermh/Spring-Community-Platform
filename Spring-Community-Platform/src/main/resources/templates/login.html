@@ -1,85 +1,93 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org"
-    xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
-    th:replace="~{layout/layout :: layout(content=~{::content})}">
+	xmlns:sec="http://www.thymeleaf.org/extras/spring-security"
+	th:replace="~{layout/layout :: layout(content=~{::content})}">
 
 <th:block th:fragment="content">
-    <div class="row justify-content-center">
-        <div class="col-md-6 col-lg-4">
+	<div class="row justify-content-center">
+		<div class="col-md-6 col-lg-4">
 
-            <div th:if="${message}" class="alert alert-success text-center mb-3 shadow-sm" th:text="${message}"></div>
+			<div th:if="${message}"
+				class="alert alert-success text-center mb-3 shadow-sm"
+				th:text="${message}"></div>
 
-            <div th:if="${param.withdraw}" class="alert alert-info text-center mb-3 shadow-sm" th:text="#{login.alert.withdraw}">
-                회원 탈퇴가 완료되었습니다.
-            </div>
+			<div th:if="${param.withdraw}"
+				class="alert alert-info text-center mb-3 shadow-sm"
+				th:text="#{login.alert.withdraw}">회원 탈퇴가 완료되었습니다.</div>
 
-            <div th:if="${param.passwordChanged}" class="alert alert-info text-center mb-3 shadow-sm" th:text="#{login.alert.passwordChanged}">
-                비밀번호가 변경되었습니다. 다시 로그인해주세요.
-            </div>
+			<div th:if="${param.passwordChanged}"
+				class="alert alert-info text-center mb-3 shadow-sm"
+				th:text="#{login.alert.passwordChanged}">비밀번호가 변경되었습니다. 다시
+				로그인해주세요.</div>
 
-            <div class="card shadow-sm border-0 mt-4">
-                <div class="card-body p-4">
-                    <h3 class="text-center mb-4 fw-bold" th:text="#{login.title}">로그인</h3>
+			<div class="card shadow-sm border-0 mt-4">
+				<div class="card-body p-4">
+					<h3 class="text-center mb-4 fw-bold" th:text="#{login.title}">로그인</h3>
 
-                    <form th:action="@{/login}" method="post">
-                        <div class="mb-3">
-                            <label class="form-label fw-semibold" th:text="#{login.id.label}">아이디</label>
-                            <input type="text" name="username" class="form-control" 
-                                   th:placeholder="#{login.id.placeholder}" required>
-                        </div>
+					<form th:action="@{/login}" method="post">
+						<div class="mb-3">
+							<label class="form-label fw-semibold" th:text="#{login.id.label}">아이디</label>
+							<input type="text" name="username" class="form-control"
+								th:placeholder="#{login.id.placeholder}" required>
+						</div>
 
-                        <div class="mb-2">
-                            <label class="form-label fw-semibold" th:text="#{login.pw.label}">비밀번호</label>
-                            <input type="password" name="password" class="form-control" 
-                                   th:placeholder="#{login.pw.placeholder}" required>
-                        </div>
+						<div class="mb-2">
+							<label class="form-label fw-semibold" th:text="#{login.pw.label}">비밀번호</label>
+							<input type="password" name="password" class="form-control"
+								th:placeholder="#{login.pw.placeholder}" required>
+						</div>
 
-                        <div class="text-end mb-3">
-                            <a th:href="@{/account/find-password}" 
-                               class="text-muted small text-decoration-none"
-                               th:text="#{login.find.account}">
-                               아이디 또는 비밀번호를 잊으셨나요?
-                            </a>
-                        </div>
+						<div class="text-end mb-3">
+							<a th:href="@{/account/find-password}"
+								class="text-muted small text-decoration-none"
+								th:text="#{login.find.account}"> 아이디 또는 비밀번호를 잊으셨나요? </a>
+						</div>
 
-                        <button type="submit" class="btn btn-primary w-100 fw-bold py-2" th:text="#{login.btn}">로그인</button>
-                    </form>
+						<button type="submit" class="btn btn-primary w-100 fw-bold py-2"
+							th:text="#{login.btn}">로그인</button>
+					</form>
 
-                    <div th:if="${param.error}" class="mt-4">
-                        
-                        <div th:if="${#strings.contains(param.error, '탈퇴')}"
-                             class="alert alert-light border text-center shadow-sm">
-                            <div class="small mb-2" th:text="${param.error}"></div>
-                            <a th:href="@{/account/restore(username=${param.username})}"
-                               class="btn btn-sm btn-dark w-100"
-                               th:text="#{login.error.restore.btn}">계정 복구하기</a>
-                        </div>
+					<div th:if="${param.error}" class="mt-4">
 
-                        <div th:if="${#strings.contains(param.error, '이메일')}"
-                             class="alert alert-light border text-center shadow-sm">
-                            <div class="small mb-2" th:text="${param.error}"></div>
-                            <a th:href="@{/resend-verification(username=${param.username})}"
-                               class="btn btn-sm btn-outline-primary w-100"
-                               th:text="#{login.error.resend.email}">인증 메일 다시 받기</a>
-                        </div>
+						<div th:if="${#strings.contains(param.error, '탈퇴')}"
+							class="alert alert-light border text-center shadow-sm">
+							<div class="small mb-2" th:text="${param.error}"></div>
+							<a th:href="@{/account/restore(username=${param.username})}"
+								class="btn btn-sm btn-dark w-100"
+								th:text="#{login.error.restore.btn}">계정 복구하기</a>
+						</div>
 
-                        <div th:unless="${#strings.contains(param.error, '이메일') or #strings.contains(param.error, '탈퇴')}"
-                             class="alert alert-danger text-center small shadow-sm">
-                            <span th:text="${param.error}"></span>
-                        </div>
-                    </div>
+						<div th:if="${#strings.contains(param.error, '이메일')}"
+							class="alert alert-light border text-center shadow-sm">
+							<div class="small mb-2" th:text="${param.error}"></div>
 
-                    <hr class="my-4 text-muted opacity-25">
+							<a href="#"
+								onclick="const username = document.querySelector('input[name=username]').value; 
+                if(!username) { alert('아이디를 먼저 입력해주세요.'); return false; }
+                location.href='/resend-verification?username=' + encodeURIComponent(username);"
+								class="btn btn-sm btn-outline-primary w-100"> 인증 메일 다시 받기 </a>
+						</div>
 
-                    <div class="text-center small">
-                        <span th:text="#{login.no.account}">아직 계정이 없으신가요?</span>
-                        <a th:href="@{/register}" class="fw-bold text-primary text-decoration-none ms-1" th:text="#{login.register.link}">회원가입</a>
-                    </div>
+						<div
+							th:unless="${#strings.contains(param.error, '이메일') or #strings.contains(param.error, '탈퇴')}"
+							class="alert alert-danger text-center small shadow-sm">
+							<span th:text="${param.error}"></span>
+						</div>
+					</div>
 
-                </div>
-            </div>
+					<hr class="my-4 text-muted opacity-25">
 
-        </div>
-    </div>
+					<div class="text-center small">
+						<span th:text="#{login.no.account}">아직 계정이 없으신가요?</span> <a
+							th:href="@{/register}"
+							class="fw-bold text-primary text-decoration-none ms-1"
+							th:text="#{login.register.link}">회원가입</a>
+					</div>
+
+				</div>
+			</div>
+
+		</div>
+	</div>
 </th:block>
 </html>
