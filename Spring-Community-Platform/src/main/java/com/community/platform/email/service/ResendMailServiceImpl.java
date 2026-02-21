@@ -13,17 +13,18 @@ import java.util.Map;
 
 @Slf4j
 @Service
-@Profile("prod") // Railway(운영) 환경에서만 이 클래스가 활성화
+@Profile("prod")
 public class ResendMailServiceImpl implements MailService {
 
-	@Value("${resend.api.key:none}") 
-	private String apiKey;
+    @Value("${resend.api.key:none}") 
+    private String apiKey;
 
-	@Value("${app.base-url:https://spring-community-platform-production.up.railway.app}") 
-	private String baseUrl;
+    @Value("${app.base-url:https://spring-community-platform-production.up.railway.app}") 
+    private String baseUrl;
 
     @Override
     public void sendVerificationMail(String to, String token) {
+        log.info("#### [메일 발송 시도] 수신자: {}, 토큰 존재여부: {}", to, (token != null));
         String link = baseUrl + "/verify-email?token=" + token;
         String subject = "[회원가입] 이메일 인증 안내";
         String content = "<p>안녕하세요. 아래 링크를 클릭하여 회원가입 인증을 완료해 주세요:</p>" +
@@ -34,6 +35,7 @@ public class ResendMailServiceImpl implements MailService {
 
     @Override
     public void sendPasswordResetMail(String to, String token) {
+        log.info("#### [비밀번호 재설정 시도] 수신자: {}", to);
         String link = baseUrl + "/reset-password?token=" + token;
         String subject = "[비밀번호 재설정] 인증 링크 안내";
         String content = "<p>안녕하세요. 비밀번호를 재설정하시려면 아래 링크를 클릭해 주세요:</p>" +
@@ -43,16 +45,16 @@ public class ResendMailServiceImpl implements MailService {
     }
 
     private void sendRequest(String to, String subject, String content) {
+        log.info("#### [Resend API 호출 시작] Target: {}", to);
+        log.info("#### [설정값 확인] API Key 존재여부: {}, BaseURL: {}", (apiKey != null && !apiKey.equals("none")), baseUrl);
+
         RestTemplate restTemplate = new RestTemplate();
 
-        // 1. 헤더 설정 (API Key 인증)
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
         headers.setBearerAuth(apiKey);
 
-        // 2. 요청 바디 설정 (Resend API 규격)
         Map<String, Object> body = new HashMap<>();
-        // Resend 무료 티어는 기본적으로 'onboarding@resend.dev'를 발신자로 사용합니다.
         body.put("from", "onboarding@resend.dev"); 
         body.put("to", to);
         body.put("subject", subject);
@@ -61,19 +63,23 @@ public class ResendMailServiceImpl implements MailService {
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 
         try {
+            log.info("#### Resend 서버로 요청을 보냅니다...");
             ResponseEntity<String> response = restTemplate.postForEntity(
                 "https://api.resend.com/emails", 
                 entity, 
                 String.class
             );
 
+            log.info("#### Resend 응답 코드: {}", response.getStatusCode());
             if (response.getStatusCode().is2xxSuccessful()) {
-                log.info("Resend 메일 발송 성공: {}", to);
+                log.info("#### [최종 성공] Resend 메일 발송 완료: {}", to);
             } else {
-                log.error("Resend 메일 발송 실패: {}", response.getBody());
+                log.error("#### [최종 실패] Resend 응답 본문: {}", response.getBody());
             }
         } catch (Exception e) {
-            log.error("Resend API 호출 중 오류 발생: {}", e.getMessage());
+            log.error("#### [심각한 에러] Resend API 호출 중 예외 발생!");
+            log.error("#### 에러 메시지: {}", e.getMessage());
+            e.printStackTrace(); // 에러의 상세 원인(Stacktrace)을 로그에 다 찍습니다.
         }
     }
 }
