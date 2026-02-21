@@ -1,23 +1,21 @@
-server:
-  port: 8080
-
 spring:
   datasource:
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://localhost:3306/springsecurity?serverTimezone=Asia/Seoul
-    username: root
-    password: '0000'
 
   jpa:
     database: mysql
-    database-platform: org.hibernate.dialect.MySQLDialect
-    open-in-view: false
     hibernate:
-      ddl-auto: update
+      ddl-auto: ${SPRING_JPA_HIBERNATE_DDL_AUTO:none} # 배포 시에는 데이터 유지를 위해 none 또는 update
     properties:
       hibernate:
-        format_sql: true
-        show_sql: true
+        format_sql: false
+        show_sql: false
+        highlight_sql: true
 
-app:
-  base-url: http://localhost:8080
+
+server:
+  forward-headers-strategy: native
+  port: ${PORT:8080} # Railway는 보통 PORT 환경변수를 사용합니다.

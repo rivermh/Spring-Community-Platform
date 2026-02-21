@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: dev # 아무 설정 없으면 기본적으로 로컬(dev) 모드 실행
+    active: dev # 기본값은 dev(로컬)
 
   messages:
     basename: messages
@@ -17,11 +17,10 @@ spring:
       filter:
         enabled: true
 
-  mail:
-    host: smtp.gmail.com
-    port: 587
-    username: kmh000904@gmail.com
-    password: sloejykunbgsmrdr
-    properties:
-      mail.smtp.auth: true
-      mail.smtp.starttls.enable: true
+# 로컬과 서버에서 공통으로 읽을 수 있게 바깥으로
+app:
+  base-url: ${APP_BASE_URL:http://localhost:8080}
+
+resend:
+  api:
+    key: ${RESEND_API_KEY:dummy_key}

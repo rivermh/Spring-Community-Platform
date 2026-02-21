@@ -90,9 +90,9 @@ public class UserService {
 				.expiryDate(LocalDateTime.now().plusMinutes(30)).build();
 		tokenRepository.save(verificationToken);
 
-		// 10. 메일 발송 
+		// 10. 메일 발송
 	    try {
-	       // mailService.sendVerificationMail(email, token);
+	        mailService.sendVerificationMail(email, token);
 	    } catch (Exception e) {
 	        System.err.println("메일 발송 실패: " + e.getMessage());
 	    }
