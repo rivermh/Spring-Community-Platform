@@ -24,7 +24,7 @@
                     <form th:action="@{/login}" method="post">
                         <div class="mb-3">
                             <label class="form-label fw-semibold" th:text="#{login.id.label}">아이디</label>
-                            <input type="text" name="username" id="loginUsername" class="form-control" 
+                            <input type="text" name="username" class="form-control" 
                                    th:placeholder="#{login.id.placeholder}" required>
                         </div>
 
@@ -48,24 +48,28 @@
                     <div th:if="${param.error}" class="mt-4">
                         
                         <div th:if="${#strings.contains(param.error, '탈퇴')}"
-                             class="alert alert-light border text-center shadow-sm">
-                            <div class="small mb-2" th:text="${param.error}"></div>
+                             class="alert alert-light border text-center shadow-sm p-3">
+                            <div class="small mb-3" th:text="${param.error}"></div>
                             <a th:href="@{/account/restore(username=${param.username})}"
                                class="btn btn-sm btn-dark w-100"
                                th:text="#{login.error.restore.btn}">계정 복구하기</a>
                         </div>
 
                         <div th:if="${#strings.contains(param.error, '이메일')}"
-                             class="alert alert-light border text-center shadow-sm">
-                            <div class="small mb-2" th:text="${param.error}">인증되지 않은 이메일입니다.</div>
+                             class="alert alert-light border text-center shadow-sm p-3">
+                            <div class="small mb-3 text-danger fw-bold" th:text="${param.error}"></div>
                             
-                            <button type="button" 
-                                    onclick="const username = document.getElementById('loginUsername').value; 
-                                             if(!username) { alert('아이디를 먼저 입력해주세요.'); return false; }
-                                             location.href='/resend-verification?username=' + encodeURIComponent(username);"
-                                    class="btn btn-sm btn-outline-primary w-100">
-                                <i class="bi bi-envelope-at me-1"></i> 인증 메일 다시 받기
-                            </button>
+                            <form th:action="@{/resend-verification}" method="get">
+                                <div class="mb-2">
+                                    <input type="text" name="username" 
+                                           class="form-control form-control-sm text-center" 
+                                           th:value="${param.username}"
+                                           placeholder="아이디를 입력해주세요" required>
+                                </div>
+                                <button type="submit" class="btn btn-sm btn-outline-primary w-100 fw-bold">
+                                    인증 메일 다시 받기
+                                </button>
+                            </form>
                         </div>
 
                         <div th:unless="${#strings.contains(param.error, '이메일') or #strings.contains(param.error, '탈퇴')}"
