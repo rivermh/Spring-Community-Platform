@@ -28,7 +28,7 @@ public class AdminMainController {
         model.addAttribute("todaySignups", adminUserService.getTodaySignupCount());
         model.addAttribute("bannedUsers", adminUserService.getBannedUserCount());
         
-        // [수정] 실제 게시글 서비스에서 데이터를 가져옵니다.
+        // [수정] 실제 게시글 서비스에서 데이터를 가져옴
         model.addAttribute("todayPosts", adminPostService.getTodayPostCount());
         model.addAttribute("pendingReports", 0); // 신고 기능은 추후 확장
         

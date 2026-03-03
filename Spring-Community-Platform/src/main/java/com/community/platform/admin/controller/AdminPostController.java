@@ -12,7 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 @Controller
-@RequestMapping("/admin/posts") // 경로를 /admin/posts로 구분합니다.
+@RequestMapping("/admin/posts") // 경로를 /admin/posts로 구분
 @RequiredArgsConstructor
 public class AdminPostController {
 
