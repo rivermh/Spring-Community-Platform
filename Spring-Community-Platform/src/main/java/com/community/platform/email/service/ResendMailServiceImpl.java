@@ -17,10 +17,10 @@ import java.util.Map;
 public class ResendMailServiceImpl implements MailService {
 
     @Value("${resend.api.key:none}") 
-    private String apiKey;
+    private String apiKey; 
 
     @Value("${app.base-url:https://spring-community-platform-production.up.railway.app}") 
-    private String baseUrl;
+    private String baseUrl;  
 
     @Override
     public void sendVerificationMail(String to, String token) {
