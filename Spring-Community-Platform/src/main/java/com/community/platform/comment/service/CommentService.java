@@ -48,68 +48,57 @@ public class CommentService {
 
 	// 댓글 목록 조회
 	@Transactional(readOnly = true)
-	public Page<CommentResponseDto> findByPost(
-	        Long postId,
-	        int page,
-	        User loginUser
-	) {
-	    Pageable pageable = PageRequest.of(page, 5);
+	public Page<CommentResponseDto> findByPost(Long postId, int page, User loginUser) {
+		Pageable pageable = PageRequest.of(page, 5);
 
-	    Page<Comment> commentPage =
-	            commentRepository.findByPostIdOrderByCreatedAtAsc(postId, pageable);
+		Page<Comment> commentPage = commentRepository.findByPostIdOrderByCreatedAtAsc(postId, pageable);
 
-	    return commentPage.map(comment -> {
+		return commentPage.map(comment -> {
 
-	        boolean isMine = false;
-	        if (loginUser != null) {
-	            isMine = comment.getUser().getUsername()
-	                    .equals(loginUser.getUsername());
-	        }
+			boolean isMine = false;
+			if (loginUser != null) {
+				isMine = comment.getUser().getUsername().equals(loginUser.getUsername());
+			}
 
-	        return new CommentResponseDto(
-	                comment.getId(),
-	                comment.getContent(),
-	                comment.getUser().getUsername(),
-	                comment.getCreatedAt().toString(),
-	                isMine
-	        );
-	    });
+			return new CommentResponseDto(comment.getId(), comment.getContent(), comment.getUser().getUsername(),
+					comment.getCreatedAt().toString(), isMine);
+		});
 	}
 
-	//댓글 수정
+	// 댓글 수정
 	@Transactional
 	public void update(Long commentId, String username, CommentUpdateDto dto) {
 		Comment comment = commentRepository.findById(commentId)
-				.orElseThrow(()-> new IllegalArgumentException("댓글이 존재하지 않습니다."));
-		
+				.orElseThrow(() -> new IllegalArgumentException("댓글이 존재하지 않습니다."));
+
 		// 작성자 검증
-		if(!comment.getUser().getUsername().equals(username)) {
+		if (!comment.getUser().getUsername().equals(username)) {
 			throw new SecurityException("수정 권한이 없습니다.");
 		}
-		
+
 		comment.update(dto.getContent());
 	} // dirty checking으로 update
-	
-	//댓글 삭제
+
+	// 댓글 삭제
 	public void delete(Long commentId, String username) {
-		
+
 		Comment comment = commentRepository.findWithUserAndPostById(commentId);
-		
-		if(comment == null) {
+
+		if (comment == null) {
 			throw new IllegalArgumentException("댓글이 존재하지 않습니다.");
 		}
-		
+
 		// 작성자 검증
-		if(!comment.getUser().getUsername().equals(username)) {
+		if (!comment.getUser().getUsername().equals(username)) {
 			throw new SecurityException("삭제 권한이 없습니다.");
 		}
-		
+
 		commentRepository.delete(comment);
 	}
-	
+
 	// 마이페이지 내가 쓴 댓글 보기
-	public Page<Comment> findMyComments(Long userId, Pageable pageable){
+	public Page<Comment> findMyComments(Long userId, Pageable pageable) {
 		return commentRepository.findByUserIdOrderByCreatedAtDesc(userId, pageable);
 	}
-	
+
 }
