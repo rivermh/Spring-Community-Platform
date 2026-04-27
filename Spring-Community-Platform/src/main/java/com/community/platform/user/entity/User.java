@@ -124,7 +124,7 @@ public class User {
 		this.enabled = true;
 	}
 
-	
+	 
 	/**
      * 管理者によるステータス変更 (利用停止など)
      * (관리자에 의한 상태 변경 - 이용 정지 등)
