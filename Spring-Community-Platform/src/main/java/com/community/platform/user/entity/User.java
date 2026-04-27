@@ -140,7 +140,7 @@ public class User {
 	public void updateRoleByAdmin(Role newRole) {
 		this.role = newRole;
 	}
-
+ 
 	// BANNED 상태
 	public void ban() {
 		this.status = UserStatus.BANNED;
