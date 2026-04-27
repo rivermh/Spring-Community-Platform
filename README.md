@@ -93,66 +93,94 @@
 
 ```text
 src/main/java/com/community/platform/
-├── common/                     # 共通データ及び規格 (공통 데이터 및 규격)
-│   ├── UserStatus.java         # ユーザー状態 (유저 상태: ACTIVE, INACTIVE, WITHDRAWN)
-│   └── PostSortType.java	       # LATEST, OLDEST, TITLE
-│   └── PostSearchType.java	# TITLE, CONTENT, AUTHOR
-├── exception/                  # 例外処理 (예외 처리)
-│   ├── GlobalExceptionHandler.java # 全域例外ハンドリング (전역 예외 처리)
-├── security/                   # 認証・認可のロジック (인증 및 인가 로직)
-│   ├── CustomUserDetails.java  # Security専用ユーザーオブジェクト (보안 전용 유저 객체)
-│   ├── CustomUserDetailsService.java # DB連動認証サービス (DB 연동 인증 서비스)
-│   ├── CustomLoginSuccessHandler.java # ログイン成功時の状態検証 (로그인 성공 핸들러)
-│   └── CustomLoginFailureHandler.java # ログイン失敗時の事由別ハンドリング (로그인 실패 핸들러)
-│   └── SecurityConfig.java     # Spring Security設定及びパスセキュリティ (보안 설정)
-├── email/                      # メール認証ドメイン (이메일 인증 도메인)
+├── admin/                      # 管理者機能ドメイン (관리자 기능 도메인)
 │   ├── controller/
-│   │   └── EmailVerificationController
-│   ├── entity/
-│   │   └── EmailVerificationToken.java # 認証トークンエンティティ (인증 토큰 엔티티)
-│   ├── repository/
-│   │   └── EmailVerificationTokenRepository.java
-│   └── service/
-│       └── MailService.java    # SMTPを利用したメール送信 (메일 발송 서비스)
-├── post/                       # 投稿及びいいねドメイン (게시글 및 좋아요 도메인)
-│   ├── controller/
-│   │   └── PostController.java
+│   │   ├── AdminMainController.java # ダッシュボード統計およびユーザー管理 (대시보드 통계 및 유저 관리)
+│   │   ├── AdminPostController.java # 投稿の参照および強制削除 (게시물 조회 및 강제 삭제)
+│   │   └── AdminUserController.java # ユーザー状態・権限管理API (유저 상태 및 권한 관리 API)
 │   ├── dto/
-│   │   ├── PostDetailDto.java
-│   │   ├── PostEditDto.java
-│   ├── entity/
-│   │   ├── Post.java
-│   │   └── PostLike.java       # 投稿とユーザーのN:M連結 (게시물-유저 연결 엔티티)
-│   ├── repository/
-│   │   ├── PostRepository.java # @EntityGraphによる最適化 (Fetch Join 적용)
-│   │   └── PostLikeRepository.java
+│   │   ├── AdminPostResponseDto.java # 管理者用投稿情報のレスポンスDTO (관리자용 게시물 정보 반환 DTO)
+│   │   └── AdminUserResponseDto.java # 管理者用ユーザー情報のレスポンスDTO (관리자용 유저 정보 반환 DTO)
 │   └── service/
-│       ├── PostService.java
-│       └── PostLikeService.java
+│       ├── AdminPostService.java    # 投稿管理および統計データ集計 (게시물 관리 및 통계 데이터 집계)
+│       └── AdminUserService.java    # 会員権限変更・状態管理および登録統計 (회원 권한 변경, 상태 관리 및 가입 통계)
+
 ├── comment/                    # コメントドメイン (댓글 도메인)
 │   ├── controller/
-│   │   └── CommentController.java
+│   │   └── CommentRestController.java # コメントの作成・参照・更新・削除API (댓글 작성·조회·수정·삭제 API)
 │   ├── dto/
-│   │   ├── CommentCreateDto.java
-│   │   ├── CommentResponseDto.java
-│   │   ├── CommentUpdateDto.java
+│   │   ├── CommentCreateDto.java   # コメント作成用DTO (댓글 작성용 입력 DTO)
+│   │   ├── CommentResponseDto.java # コメント表示用レスポンスDTO (댓글 표시용 데이터 반환 객체)
+│   │   └── CommentUpdateDto.java   # コメント更新用DTO (댓글 수정용 DTO)
 │   ├── entity/
-│   │   └── Comment.java
+│   │   └── Comment.java            # コメントエンティティ (댓글 핵심 엔티티)
 │   ├── repository/
-│   │   └── CommentRepository.java
+│   │   └── CommentRepository.java  # @EntityGraphによるクエリ最適化 (EntityGraph를 통한 쿼리 최적화)
 │   └── service/
-│       └── CommentService.java
-└── user/                       # ユーザー及びマイページ (유저 및 마이페이지)
-    ├── controller/
-    │   ├── AccountController.java  # アカウント復旧及び認証管理 (계정 복구 및 인증)
-    │   ├── AuthController.java     # 会員登録及びログインページ (회원가입 및 로그인)
-    │   ├── LoginController.java   # @GetMapping("/login")		
-    │   ├── MyPageController.java   # 活動履歴の照会及び退会 (활동 조회 및 탈퇴)
-    │   └── UserCheckController.java # 重複チェック(REST API) (중복 체크)
-    ├── entity/
-    │   ├── User.java               # ユーザー基幹エンティティ (유저 핵심 엔티티)
-    │   └── Role.java               # 権限区分 (권한 구분: USER, ADMIN)
-    ├── repository/
-    │   └── UserRepository.java
-    └── service/
-        └── UserService.java        # 会員登録、退会、復旧ロジック (회원 관리 로직)
+│       └── CommentService.java     # コメント作成・削除および権限検証 (댓글 생성·삭제 및 권한 검증)
+
+├── common/                      # 共通定義 (공통 데이터 및 규격)
+│   ├── DataInit.java           # 開発環境用テストデータ自動生成 (개발 환경용 테스트 데이터 자동 생성)
+│   ├── PostSearchType.java     # 投稿検索条件区分 (게시물 검색 조건 구분)
+│   ├── PostSortType.java       # 投稿ソート順定義 (게시물 정렬 순서 정의)
+│   └── UserStatus.java         # ユーザーアカウント状態定義 (유저 계정 상태 정의)
+
+├── config/                     # 設定 (환경 설정)
+│   └── LocaleConfig.java       # 多言語対応(i18n)設定 (다국어 대응 설정)
+
+├── controller/                 # 共通コントローラー (공통 컨트롤러)
+│   └── HomeController.java     # メインページルーティング (메인 페이지 라우팅)
+
+├── email/                      # メール認証ドメイン (이메일 인증 도메인)
+│   ├── controller/
+│   │   └── EmailVerificationController.java # メール認証およびパスワード再設定処理 (메일 인증 및 비밀번호 재설정 처리)
+│   ├── entity/
+│   │   └── EmailVerificationToken.java # 認証トークン管理および有効期限定義 (인증 토큰 관리 및 유효 기간 정의)
+│   ├── repository/
+│   │   └── EmailVerificationTokenRepository.java # 認証トークン取得および既存データ削除 (인증 토큰 조회 및 기존 데이터 삭제)
+│   └── service/
+│       ├── EmailVerificationService.java # トークン検証およびアカウント有効化ロジック (토큰 검증 및 계정 활성화 로직)
+│       ├── MailService.java         # メール送信インターフェース (메일 송신 기능 인터페이스)
+│       ├── GmailServiceImpl.java    # 開発環境用(SMTP)メール送信実装 (개발 환경용 메일 송신 구현)
+│       └── ResendMailServiceImpl.java # 本番環境用(外部API)メール送信実装 (운영 환경용 메일 송신 구현)
+
+├── exception/                  # 例外処理 (예외 처리)
+│   └── GlobalExceptionHandler.java # グローバル例外ハンドリングおよびエラーページ遷移 (전역 예외 핸들링)
+
+├── post/                       # 投稿ドメイン (게시물 도메인)
+│   ├── controller/
+│   │   └── PostController.java      # 投稿作成・検索・ソート・いいね機能制御 (게시물 작성·검색·정렬·좋아요 기능 제어)
+│   ├── dto/
+│   │   ├── PostDetailDto.java       # 投稿詳細表示用DTO (게시물 상세 표시용 DTO)
+│   │   └── PostEditDto.java         # 投稿編集用DTO (게시물 편집용 DTO)
+│   ├── entity/
+│   │   ├── Post.java                # 投稿エンティティおよびライフサイクル定義 (게시물 엔티티 및 라이프사이클 정의)
+│   │   └── PostLike.java            # 投稿とユーザーの中間エンティティ (게시물과 유저의 중간 엔티티)
+│   ├── repository/
+│   │   ├── PostLikeRepository.java  # @EntityGraphによるN+1問題解決 (EntityGraph를 통한 N+1 문제 해결)
+│   │   └── PostRepository.java      # キーワード検索および統計用クエリ定義 (키워드 검색 및 통계용 쿼리 정의)
+│   └── service/
+│       ├── PostLikeService.java     # いいね機能トグル(登録・解除)ロジック (좋아요 기능 토글 로직)
+│       └── PostService.java         # 検索・ソート・ページングを含むビジネスロジック (검색·정렬 및 페이징 포함 비즈니스 로직)
+
+├── security/                   # セキュリティ設定 (보안 설정)
+│   ├── CustomAuthenticationFailureHandler.java # ログイン失敗時例外処理 (로그인 실패 시 예외 핸들링)
+│   ├── CustomLoginSuccessHandler.java # ログイン成功後状態検証および後処理 (로그인 성공 후 상태 검증 및 후속 처리)
+│   ├── CustomUserDetails.java       # Spring Securityユーザー情報カプセル化 (유저 정보 캡슐화)
+│   ├── CustomUserDetailsService.java # DBユーザー情報取得および認証連携 (DB 유저 정보 취득 및 인증 연동)
+│   └── SecurityConfig.java          # セキュリティポリシーおよびフィルタチェーン設定 (보안 정책 및 필터 체인 설정)
+
+├── user/                       # ユーザードメイン (유저 도메인)
+│   ├── controller/
+│   │   ├── AccountController.java    # アカウント復旧およびパスワード再設定処理 (계정 복구 및 비밀번호 재설정)
+│   │   ├── AuthController.java       # 会員登録処理 (회원가입 처리)
+│   │   ├── LoginController.java      # ログインページルーティング (로그인 페이지 라우팅)
+│   │   ├── MyPageController.java     # マイページ管理 (마이페이지 관리)
+│   │   └── UserCheckController.java  # 重複チェックAPI (중복 체크 API)
+│   ├── entity/
+│   │   ├── Role.java                 # ユーザー権限定義 (유저 권한 정의)
+│   │   └── User.java                 # ユーザーエンティティおよび状態管理 (유저 엔티티 및 상태 관리)
+│   ├── repository/
+│   │   └── UserRepository.java       # 各種検索条件および統計用クエリ定義 (각종 검색 조건 및 통계용 쿼리 정의)
+│   └── service/
+│       └── UserService.java         # 会員登録・認証・パスワード再設定等コアロジック (회원가입·인증·비밀번호 재설정 핵심 로직)
