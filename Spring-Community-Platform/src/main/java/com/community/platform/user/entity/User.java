@@ -123,7 +123,7 @@ public class User {
 		this.status = UserStatus.ACTIVE;
 		this.enabled = true;
 	}
-
+ 
 	 
 	/**
      * 管理者によるステータス変更 (利用停止など)
